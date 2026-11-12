@@ -61,6 +61,120 @@ if [ -z "$TOKEN" ]; then
 fi
 echo "✅ JWT Token obtained: ${TOKEN:0:20}... (User ID: $MY_USER_ID)"
 
+# Step 2b: Add 2 Personal Expenses (500 FOOD, 1500 TRAVEL)
+echo ""
+echo "--- 2b. Add 2 Personal Expenses (FOOD 500, TRAVEL 1500) ---"
+P_EXP1_PAYLOAD=$(cat <<EOF
+{
+  "title": "Client Team Lunch",
+  "amount": 500.00,
+  "category": "FOOD",
+  "paymentMethod": "UPI",
+  "date": "2026-11-10"
+}
+EOF
+)
+P_EXP1_RESP=$(curl -s -X POST "$CORE_URL/expenses" \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $TOKEN" \
+  -d "$P_EXP1_PAYLOAD")
+echo "Personal Expense 1 Response: $P_EXP1_RESP"
+
+P_EXP2_PAYLOAD=$(cat <<EOF
+{
+  "title": "Intercity Train Ticket",
+  "amount": 1500.00,
+  "category": "TRAVEL",
+  "paymentMethod": "CARD",
+  "date": "2026-11-12"
+}
+EOF
+)
+P_EXP2_RESP=$(curl -s -X POST "$CORE_URL/expenses" \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $TOKEN" \
+  -d "$P_EXP2_PAYLOAD")
+echo "Personal Expense 2 Response: $P_EXP2_RESP"
+
+# Step 2c: Assert Real Per-User Analytics Response (totalMonthlySpent = 2000 & CSV rows)
+echo ""
+echo "--- 2c. Verify Real Per-User Analytics for User A ---"
+ANALYTICS_A=$(curl -s -X GET "$CORE_URL/reports/analytics?monthYear=2026-11" \
+  -H "Authorization: Bearer $TOKEN")
+echo "User A Analytics Response: $ANALYTICS_A"
+
+TOTAL_SPENT_A=$(echo "$ANALYTICS_A" | grep -o '"totalMonthlySpent":[0-9.]*' | cut -d':' -f2)
+echo "Total Monthly Spent detected: $TOTAL_SPENT_A"
+if [[ "$TOTAL_SPENT_A" =~ ^2000(\.0+)?$ ]]; then
+  echo "✅ Assertion passed: totalMonthlySpent = $TOTAL_SPENT_A (expected 2000)"
+else
+  echo "❌ Assertion failed: totalMonthlySpent is $TOTAL_SPENT_A, expected 2000"
+  exit 1
+fi
+
+CSV_A=$(curl -s -X GET "$CORE_URL/reports/export-csv?monthYear=2026-11" \
+  -H "Authorization: Bearer $TOKEN")
+echo "User A CSV Export:"
+echo "$CSV_A"
+
+if echo "$CSV_A" | grep -q "FOOD,Client Team Lunch,500.00" && echo "$CSV_A" | grep -q "TRAVEL,Intercity Train Ticket,1500.00"; then
+  echo "✅ Assertion passed: CSV contains both personal expense rows exactly!"
+else
+  echo "❌ Assertion failed: CSV does not contain expected rows!"
+  exit 1
+fi
+
+# Step 2d: Verify User Isolation with a Different User (User B)
+echo ""
+echo "--- 2d. Verify User Isolation: User B Cannot See User A's Expenses ---"
+USER_B_EMAIL="tester_b_${TIMESTAMP}@example.com"
+REG_B_PAYLOAD=$(cat <<EOF
+{
+  "name": "Different User B",
+  "email": "$USER_B_EMAIL",
+  "password": "$TEST_PASS",
+  "currency": "INR"
+}
+EOF
+)
+curl -s -X POST "$CORE_URL/auth/register" \
+  -H "Content-Type: application/json" \
+  -d "$REG_B_PAYLOAD" > /dev/null
+
+LOGIN_B_PAYLOAD=$(cat <<EOF
+{
+  "email": "$USER_B_EMAIL",
+  "password": "$TEST_PASS"
+}
+EOF
+)
+LOGIN_B_RESP=$(curl -s -X POST "$CORE_URL/auth/login" \
+  -H "Content-Type: application/json" \
+  -d "$LOGIN_B_PAYLOAD")
+
+TOKEN_B=$(echo "$LOGIN_B_RESP" | grep -o '"token":"[^"]*' | grep -o '[^"]*$')
+ANALYTICS_B=$(curl -s -X GET "$CORE_URL/reports/analytics?monthYear=2026-11" \
+  -H "Authorization: Bearer $TOKEN_B")
+TOTAL_SPENT_B=$(echo "$ANALYTICS_B" | grep -o '"totalMonthlySpent":[0-9.]*' | cut -d':' -f2)
+echo "User B Analytics Response: $ANALYTICS_B"
+echo "User B Total Monthly Spent: $TOTAL_SPENT_B"
+
+if [[ "$TOTAL_SPENT_B" =~ ^0(\.0+)?$ ]]; then
+  echo "✅ Assertion passed: User B totalMonthlySpent = $TOTAL_SPENT_B (User A's 2000 is isolated)"
+else
+  echo "❌ Assertion failed: User B sees non-zero spending: $TOTAL_SPENT_B"
+  exit 1
+fi
+
+CSV_B=$(curl -s -X GET "$CORE_URL/reports/export-csv?monthYear=2026-11" \
+  -H "Authorization: Bearer $TOKEN_B")
+if echo "$CSV_B" | grep -q "Client Team Lunch" || echo "$CSV_B" | grep -q "Intercity Train Ticket"; then
+  echo "❌ User isolation failure: User B can see User A's CSV records!"
+  exit 1
+else
+  echo "✅ Assertion passed: User B CSV does not contain User A's expenses!"
+fi
+
 # Step 3: Create a Group
 echo ""
 echo "--- 3. Testing Create Group ---"
@@ -211,7 +325,7 @@ SETTLE_RESP=$(curl -s -X POST "$CORE_URL/settlements" \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer $TOKEN" \
   -d "$SETTLE_PAYLOAD")
-echo "Settlement Response: $SETTLE_RESP"
+echo "Settlement Response JSON: $SETTLE_RESP"
 
 # Verify updated debts after settlement
 UPDATED_DEBTS=$(curl -s -X GET "$CORE_URL/groups/$GROUP_ID/simplified-debts" \
