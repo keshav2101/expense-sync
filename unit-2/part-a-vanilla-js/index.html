@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ExpenseSync - Vanilla JS Split Calculator (Unit 2 Part A)</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Third-party Library (Syllabus Requirement: canvas-confetti) -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <h1>ExpenseSync Bill & Split Calculator</h1>
+      <p style="color: var(--text-muted);">
+        Unit 2 Part A: Pure JavaScript DOM Manipulation, Events, ES6 Array Methods & 4 Split Algorithms.
+      </p>
+    </header>
+
+    <!-- Main Calculation Card -->
+    <main class="card">
+      <div class="card-title">
+        <span>Expense Setup</span>
+        <button id="addMemberBtn" class="btn btn-secondary btn-sm">+ Add Member</button>
+      </div>
+
+      <div class="grid-2">
+        <div class="form-group">
+          <label for="totalAmount">Total Expense Amount (₹) *</label>
+          <input type="number" id="totalAmount" value="2400" min="1" step="0.01">
+        </div>
+
+        <div class="form-group">
+          <label for="paidBySelect">Who Paid? (Payer)</label>
+          <select id="paidBySelect">
+            <!-- Dynamically populated via JS -->
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Split Type Method *</label>
+        <div class="radio-group" id="splitTypeRadios">
+          <label class="radio-label">
+            <input type="radio" name="splitMode" value="EQUAL" checked>
+            <strong>1. Equal</strong> (1/N)
+          </label>
+          <label class="radio-label">
+            <input type="radio" name="splitMode" value="EXACT">
+            <strong>2. Exact</strong> (₹ amounts)
+          </label>
+          <label class="radio-label">
+            <input type="radio" name="splitMode" value="PERCENT">
+            <strong>3. Percentage</strong> (%)
+          </label>
+          <label class="radio-label">
+            <input type="radio" name="splitMode" value="SHARES">
+            <strong>4. Shares</strong> (Ratio)
+          </label>
+        </div>
+      </div>
+
+      <!-- Dynamic Member Breakdown Container -->
+      <div class="form-group">
+        <label>Member Shares & Live Balances</label>
+        <div id="membersContainer">
+          <!-- Member rows rendered dynamically via app.js -->
+        </div>
+      </div>
+
+      <!-- Validation Error or Success Alert -->
+      <div id="statusAlert" class="alert alert-success" style="display: none;"></div>
+
+      <p class="rounding-note" id="roundingNote">
+        * Rounding Rule: Any fractional remainder paise is absorbed by the last member so the sum equals the exact total.
+      </p>
+
+      <div style="margin-top: 1.5rem; display: flex; gap: 1rem;">
+        <button id="calculateBtn" class="btn btn-primary" style="flex: 1;">
+          ⚡ Compute & Finalize Split
+        </button>
+        <button id="resetBtn" class="btn btn-secondary">
+          Reset
+        </button>
+      </div>
+    </main>
+
+    <!-- Result / Net Balances Summary Card -->
+    <section class="card" id="resultsCard" style="display: none;">
+      <div class="card-title">
+        <span>Final Net Balance Settlements</span>
+        <span style="font-size: 0.85rem; color: var(--success);">✓ Balanced</span>
+      </div>
+      <div id="settlementList" style="display: flex; flex-direction: column; gap: 0.5rem;">
+        <!-- Computed balances injected here -->
+      </div>
+    </section>
+
+    <!-- Academic Information Box -->
+    <footer style="text-align: center; font-size: 0.85rem; color: var(--text-muted); margin-top: 2rem;">
+      <p>Course: 21CSE354T Full Stack Web Development | SRM Institute of Science and Technology</p>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

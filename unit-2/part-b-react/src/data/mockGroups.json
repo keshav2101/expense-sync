@@ -1,0 +1,50 @@
+[
+  {
+    "id": 1,
+    "name": "Goa Trip 2026",
+    "type": "TRIP",
+    "members": [
+      { "id": 1, "name": "Rahul Sharma (You)", "email": "rahul@example.com" },
+      { "id": 2, "name": "Priya Nair", "email": "priya@example.com" },
+      { "id": 3, "name": "Amit Patel", "email": "amit@example.com" },
+      { "id": 4, "name": "Sneha Rao", "email": "sneha@example.com" }
+    ],
+    "balances": {
+      "1": -1250.00,
+      "2": 3400.00,
+      "3": -2150.00,
+      "4": 0.00
+    },
+    "simplifiedDebts": [
+      { "from": "Rahul Sharma (You)", "to": "Priya Nair", "amount": 1250.00 },
+      { "from": "Amit Patel", "to": "Priya Nair", "amount": 2150.00 }
+    ],
+    "activity": [
+      { "id": 101, "text": "Priya added 'Beach Villa 2-Night Stay' (₹16,000)", "timestamp": "2026-11-07 14:30" },
+      { "id": 102, "text": "Rahul added 'Uber Airport Cab' (₹850)", "timestamp": "2026-11-04 09:15" },
+      { "id": 103, "text": "Amit settled ₹1,200 with Rahul", "timestamp": "2026-11-08 20:00" }
+    ]
+  },
+  {
+    "id": 2,
+    "name": "Flatmates B-302",
+    "type": "HOME",
+    "members": [
+      { "id": 1, "name": "Rahul Sharma (You)", "email": "rahul@example.com" },
+      { "id": 3, "name": "Amit Patel", "email": "amit@example.com" },
+      { "id": 4, "name": "Sneha Rao", "email": "sneha@example.com" }
+    ],
+    "balances": {
+      "1": 450.00,
+      "3": -450.00,
+      "4": 0.00
+    },
+    "simplifiedDebts": [
+      { "from": "Amit Patel", "to": "Rahul Sharma (You)", "amount": 450.00 }
+    ],
+    "activity": [
+      { "id": 201, "text": "Rahul added 'Electricity Bill B-302' (₹1,450)", "timestamp": "2026-11-11 18:00" },
+      { "id": 202, "text": "Sneha settled ₹800 with Rahul", "timestamp": "2026-11-04 11:20" }
+    ]
+  }
+]
