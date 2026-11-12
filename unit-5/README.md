@@ -28,22 +28,22 @@ To elevate **ExpenseSync** from a monolithic structure to a distributed **Micros
 
 ```mermaid
 flowchart LR
-    subgraph Client Tier
-        UI["React Client (Vite)<br>Port 5173"]
+    subgraph ClientTier ["Client Tier"]
+        UI["React Client (Vite)<br/>Port 5173"]
     end
 
-    subgraph Service Tier
-        Core["Core Service (Spring Boot)<br>Port 8080<br>JPA + JWT Security"]
-        Analytics["Analytics Microservice<br>Port 8082<br>Reporting &amp; CSV Engine"]
+    subgraph ServiceTier ["Service Tier"]
+        Core["Core Service (Spring Boot)<br/>Port 8080 (JPA + JWT)"]
+        Analytics["Analytics Microservice<br/>Port 8082 (Reporting & CSV)"]
     end
 
-    subgraph Data Tier
-        DB[("MySQL 8.0 / H2<br>Database")]
+    subgraph DataTier ["Data Tier"]
+        DB[("MySQL 8.0 / H2 Database")]
     end
 
     UI -->|"REST + JWT"| Core
     Core -->|"JDBC / JPA"| DB
-    Core -->|"REST Inter-Service Call<br>(RestTemplate)"| Analytics
+    Core -->|"REST Inter-Service Call (RestTemplate)"| Analytics
     Analytics -.->|"CSV Stream / Analytics"| Core
 ```
 

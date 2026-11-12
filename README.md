@@ -16,34 +16,33 @@ ExpenseSync is designed following the 5-unit curriculum of **21CSE354T Full Stac
 ### System Architecture Diagram
 ```mermaid
 flowchart TD
-    subgraph Client Tier [Client Tier - React + Vite (Port 5173)]
-        UI[Single Page Application<br>React Router, Axios, ThemeContext, AuthContext]
-        DOM[DOM / Canvas 2D Charts]
+    subgraph ClientTier ["Client Tier: React + Vite (Port 5173)"]
+        UI["Single Page Application<br/>(React Router, Axios, ThemeContext, AuthContext)"]
+        DOM["DOM & Canvas 2D Charts"]
     end
 
-    subgraph Core Service [Core Service (Spring Boot - Port 8080)]
-        direction TB
-        SEC[Spring Security &amp; JwtAuthenticationFilter]
-        CTRL[REST Controllers<br>ExpenseController, GroupController, AuthController]
-        SERV[Service Layer<br>SplitCalculationService, DebtSimplificationService]
-        REPO[Spring Data JPA Repositories]
+    subgraph CoreService ["Core Service: Spring Boot (Port 8080)"]
+        SEC["Spring Security & JwtAuthenticationFilter"]
+        CTRL["REST Controllers<br/>(ExpenseController, GroupController, AuthController)"]
+        SERV["Service Layer<br/>(SplitCalculationService, DebtSimplificationService)"]
+        REPO["Spring Data JPA Repositories"]
     end
 
-    subgraph Analytics Microservice [Analytics Microservice (Spring Boot - Port 8082)]
-        ACTRL[AnalyticsController]
-        ASERV[AnalyticsService<br>Monthly Reports &amp; CSV Streaming]
+    subgraph AnalyticsService ["Analytics Microservice: Spring Boot (Port 8082)"]
+        ACTRL["AnalyticsController"]
+        ASERV["AnalyticsService<br/>(Monthly Reports & CSV Streaming)"]
     end
 
-    subgraph Data Tier [Persistence Tier]
-        MYSQL[("MySQL 8.0 / H2 Database<br>Relational Schema with 8 Tables")]
+    subgraph DataTier ["Persistence Tier"]
+        MYSQL[("MySQL 8.0 / H2 Database<br/>(Relational Schema with 8 Tables)")]
     end
 
-    UI -->|HTTP Requests + Bearer JWT| SEC
+    UI -->|"HTTP Requests + Bearer JWT"| SEC
     SEC --> CTRL
     CTRL --> SERV
     SERV --> REPO
-    REPO -->|JDBC / Hibernate| MYSQL
-    SERV -->|"Inter-Service REST Call<br>(RestTemplate /api/analytics)"| ACTRL
+    REPO -->|"JDBC / Hibernate"| MYSQL
+    SERV -->|"Inter-Service REST Call (RestTemplate)"| ACTRL
     ACTRL --> ASERV
 ```
 
