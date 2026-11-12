@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register Account | ExpenseSync</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/animations.css">
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <header class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="brand-logo">
+        <span class="brand-icon">₹</span>
+        <span>ExpenseSync</span>
+      </a>
+      <div class="nav-actions">
+        <button id="themeToggleBtn" class="theme-btn" aria-label="Toggle theme">
+          <span id="themeIcon">🌙</span>
+          <span id="themeLabel">Dark</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Register Form Container -->
+  <main class="auth-wrapper animate-fade-in">
+    <div class="auth-card">
+      <div class="auth-header">
+        <h2>Create an Account</h2>
+        <p>Start tracking personal finances and splitting group bills.</p>
+      </div>
+
+      <form action="dashboard.html" method="GET" novalidate>
+        <div class="form-group">
+          <label for="fullName" class="form-label">Full Name *</label>
+          <input 
+            type="text" 
+            id="fullName" 
+            name="fullName" 
+            class="form-control" 
+            placeholder="e.g. Rahul Sharma" 
+            required 
+            minlength="3"
+            autocomplete="name"
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="regEmail" class="form-label">Email Address *</label>
+          <input 
+            type="email" 
+            id="regEmail" 
+            name="email" 
+            class="form-control" 
+            placeholder="e.g. rahul@example.com" 
+            required 
+            autocomplete="email"
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="regPassword" class="form-label">Password *</label>
+          <input 
+            type="password" 
+            id="regPassword" 
+            name="password" 
+            class="form-control" 
+            placeholder="Minimum 8 characters" 
+            minlength="8" 
+            required 
+            autocomplete="new-password"
+          >
+          <span class="form-hint">Must contain at least 8 characters.</span>
+        </div>
+
+        <div class="form-group">
+          <label for="confirmPassword" class="form-label">Confirm Password *</label>
+          <input 
+            type="password" 
+            id="confirmPassword" 
+            name="confirmPassword" 
+            class="form-control" 
+            placeholder="Re-type password" 
+            minlength="8" 
+            required 
+            autocomplete="new-password"
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="defaultCurrency" class="form-label">Default Currency</label>
+          <select id="defaultCurrency" name="currency" class="form-select">
+            <option value="INR" selected>INR - Indian Rupee (₹)</option>
+            <option value="USD">USD - US Dollar ($)</option>
+            <option value="EUR">EUR - Euro (€)</option>
+          </select>
+        </div>
+
+        <div class="form-group" style="display: flex; align-items: flex-start; gap: 0.5rem;">
+          <input type="checkbox" id="terms" name="terms" required style="margin-top: 0.25rem;">
+          <label for="terms" style="font-size: 0.85rem; color: var(--text-secondary);">
+            I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
+          </label>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 0.5rem;">
+          Create Free Account
+        </button>
+
+        <p style="text-align: center; margin-top: 1.5rem; font-size: 0.9rem;">
+          Already have an account? <a href="login.html">Sign In</a>
+        </p>
+      </form>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-content">
+      <p>© 2026 ExpenseSync - 21CSE354T Full Stack Web Development Project</p>
+      <a href="index.html">← Back to Home</a>
+    </div>
+  </footer>
+
+  <script src="js/canvas-chart.js"></script>
+</body>
+</html>

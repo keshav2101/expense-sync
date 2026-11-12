@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settle Up | ExpenseSync</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/animations.css">
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="brand-logo">
+        <span class="brand-icon">₹</span>
+        <span>ExpenseSync</span>
+      </a>
+
+      <div class="nav-actions">
+        <button id="themeToggleBtn" class="theme-btn" aria-label="Toggle theme">
+          <span id="themeIcon">🌙</span>
+          <span id="themeLabel">Dark</span>
+        </button>
+        <a href="dashboard.html" class="btn btn-secondary btn-sm">Dashboard</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="app-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <ul class="sidebar-menu">
+        <li><a href="dashboard.html" class="sidebar-link"><span>📊</span> Dashboard</a></li>
+        <li><a href="add-expense.html" class="sidebar-link"><span>➕</span> Add Expense</a></li>
+        <li><a href="group.html" class="sidebar-link"><span>👥</span> My Groups</a></li>
+        <li><a href="settle-up.html" class="sidebar-link active"><span>🤝</span> Settle Up</a></li>
+      </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <div class="content-header">
+        <div>
+          <h2>Record a Settlement Payment</h2>
+          <p>Pay back a group member or record an offline cash / UPI transfer.</p>
+        </div>
+      </div>
+
+      <div class="dashboard-grid">
+        <!-- Settlement Form -->
+        <div class="card animate-fade-in">
+          <h3 style="margin-bottom: 1.25rem;">Record Payment</h3>
+          <form action="group.html" method="GET" novalidate>
+            <div class="form-group">
+              <label for="payerSelect" class="form-label">Who Paid? (Payer) *</label>
+              <select id="payerSelect" name="payer" class="form-select" required>
+                <option value="1" selected>Rahul Sharma (You)</option>
+                <option value="2">Priya Nair</option>
+                <option value="3">Amit Patel</option>
+                <option value="4">Sneha Rao</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="recipientSelect" class="form-label">Who Received? (Payee) *</label>
+              <select id="recipientSelect" name="payee" class="form-select" required>
+                <option value="2" selected>Priya Nair (You owe ₹1,250)</option>
+                <option value="1">Rahul Sharma</option>
+                <option value="3">Amit Patel</option>
+                <option value="4">Sneha Rao</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="settleAmount" class="form-label">Settlement Amount (₹) *</label>
+              <input 
+                type="number" 
+                id="settleAmount" 
+                name="amount" 
+                class="form-control" 
+                value="1250.00" 
+                step="0.01" 
+                required
+              >
+              <span class="form-hint">Tip: Click full amount to clear outstanding debt.</span>
+            </div>
+
+            <div class="form-group">
+              <label for="settleMethod" class="form-label">Payment Mode *</label>
+              <select id="settleMethod" name="method" class="form-select" required>
+                <option value="UPI" selected>UPI (GPay / PhonePe / Paytm)</option>
+                <option value="CASH">Cash in Hand</option>
+                <option value="BANK">IMPS / NEFT Transfer</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="settleDate" class="form-label">Date of Transfer</label>
+              <input type="date" id="settleDate" name="date" class="form-control" value="2026-11-12">
+            </div>
+
+            <button type="submit" class="btn btn-success" style="width: 100%; margin-top: 0.5rem;">
+              ✓ Record Settle Up Payment
+            </button>
+          </form>
+        </div>
+
+        <!-- Algorithm Insights & Settlement History -->
+        <div>
+          <div class="card" style="margin-bottom: 1.5rem;">
+            <h3>Active Debt Summary</h3>
+            <p>Calculated using the Greedy Min-Cash-Flow Algorithm:</p>
+            <div style="background: var(--bg-tertiary); padding: 1rem; border-radius: var(--border-radius); font-size: 0.9rem;">
+              <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                <span>Rahul $\rightarrow$ Priya:</span>
+                <strong style="color: var(--danger);">₹1,250.00</strong>
+              </div>
+              <div style="display: flex; justify-content: space-between;">
+                <span>Amit $\rightarrow$ Priya:</span>
+                <strong style="color: var(--danger);">₹2,150.00</strong>
+              </div>
+            </div>
+            <div style="margin-top: 1rem; font-size: 0.82rem; color: var(--text-muted);">
+              Recording ₹1,250 from Rahul to Priya will completely eliminate Rahul's debt in Goa Trip 2026.
+            </div>
+          </div>
+
+          <div class="card">
+            <h3>Past Settlements</h3>
+            <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.9rem; margin-top: 0.75rem;">
+              <li style="padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-color);">
+                <strong>Amit paid Rahul ₹1,200.00</strong> via UPI<br>
+                <small style="color: var(--text-muted);">08 Nov 2026 • Goa Trip 2026</small>
+              </li>
+              <li>
+                <strong>Sneha paid Priya ₹800.00</strong> via Cash<br>
+                <small style="color: var(--text-muted);">04 Nov 2026 • Flatmates B-302</small>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="js/canvas-chart.js"></script>
+</body>
+</html>

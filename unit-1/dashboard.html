@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard | ExpenseSync</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/animations.css">
+</head>
+<body>
+
+  <!-- Top Navigation Bar -->
+  <header class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="brand-logo">
+        <span class="brand-icon">₹</span>
+        <span>ExpenseSync</span>
+      </a>
+
+      <div class="nav-actions">
+        <button id="themeToggleBtn" class="theme-btn" aria-label="Toggle theme">
+          <span id="themeIcon">🌙</span>
+          <span id="themeLabel">Dark</span>
+        </button>
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+          <div style="width: 36px; height: 36px; border-radius: 50%; background: var(--primary); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: bold;">
+            RS
+          </div>
+          <span style="font-size: 0.9rem; font-weight: 600;">Rahul Sharma</span>
+        </div>
+        <a href="login.html" class="btn btn-secondary btn-sm">Logout</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- App Body Layout (Sidebar + Main) -->
+  <div class="app-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <ul class="sidebar-menu">
+        <li>
+          <a href="dashboard.html" class="sidebar-link active">
+            <span>📊</span> Dashboard
+          </a>
+        </li>
+        <li>
+          <a href="add-expense.html" class="sidebar-link">
+            <span>➕</span> Add Expense
+          </a>
+        </li>
+        <li>
+          <a href="group.html" class="sidebar-link">
+            <span>👥</span> My Groups
+          </a>
+        </li>
+        <li>
+          <a href="settle-up.html" class="sidebar-link">
+            <span>🤝</span> Settle Up
+          </a>
+        </li>
+      </ul>
+
+      <div style="padding: 1rem; background: var(--bg-tertiary); border-radius: var(--border-radius); font-size: 0.8rem;">
+        <strong>SRMIST FSD Lab</strong><br>
+        <span style="color: var(--text-muted);">Course: 21CSE354T</span>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      <div class="content-header">
+        <div>
+          <h2>Financial Overview</h2>
+          <p>Here's what is happening with your personal expenses and shared group debts.</p>
+        </div>
+        <div style="display: flex; gap: 0.75rem;">
+          <button class="btn btn-secondary btn-sm" onclick="alert('Exporting personal expenses to CSV...')">
+            📥 Export CSV
+          </button>
+          <a href="add-expense.html" class="btn btn-primary btn-sm">
+            ➕ Add New Expense
+          </a>
+        </div>
+      </div>
+
+      <!-- Overspend Warning Notification Banner (Requirement C) -->
+      <div class="alert alert-warning animate-fade-in">
+        <span style="font-size: 1.25rem;">⚠️</span>
+        <div>
+          <strong>Budget Alert:</strong> You have spent <strong>82%</strong> of your monthly Food & Dining budget (₹4,200 of ₹5,000). Consider pacing upcoming food orders.
+        </div>
+      </div>
+
+      <!-- Metric / Stat Summary Cards (Requirement F) -->
+      <section class="stat-grid">
+        <div class="stat-card spent">
+          <div class="stat-label">Total Spent (This Month)</div>
+          <div class="stat-value">₹19,000</div>
+          <div class="stat-subtext">Across 18 transactions</div>
+        </div>
+
+        <div class="stat-card owe">
+          <div class="stat-label">You Owe Others</div>
+          <div class="stat-value" style="color: var(--danger);">₹1,250</div>
+          <div class="stat-subtext">To Priya (Goa Trip)</div>
+        </div>
+
+        <div class="stat-card owed">
+          <div class="stat-label">You Are Owed</div>
+          <div class="stat-value" style="color: var(--success);">₹3,400</div>
+          <div class="stat-subtext">From Amit & Sneha</div>
+        </div>
+
+        <div class="stat-card budget">
+          <div class="stat-label">Monthly Budget Left</div>
+          <div class="stat-value">₹6,000</div>
+          <div class="stat-subtext">76% of ₹25,000 limit used</div>
+        </div>
+      </section>
+
+      <!-- Category Budget Meters (Requirement C) -->
+      <div class="card" style="margin-bottom: 2rem;">
+        <h3>Monthly Category Budgets</h3>
+        <p>Real-time progress bars with dynamic warning thresholds.</p>
+
+        <div class="budget-meter">
+          <div class="progress-header">
+            <span>Food & Dining (84% - Warning Threshold)</span>
+            <span>₹4,200 / ₹5,000</span>
+          </div>
+          <div class="progress-bar-container">
+            <div class="progress-bar-fill warning" style="width: 84%;"></div>
+          </div>
+        </div>
+
+        <div class="budget-meter" style="margin-top: 1rem;">
+          <div class="progress-header">
+            <span>Rent & Maintenance (95% - High Utilization)</span>
+            <span>₹9,500 / ₹10,000</span>
+          </div>
+          <div class="progress-bar-container">
+            <div class="progress-bar-fill danger" style="width: 95%;"></div>
+          </div>
+        </div>
+
+        <div class="budget-meter" style="margin-top: 1rem;">
+          <div class="progress-header">
+            <span>Travel & Transit (42% - Normal)</span>
+            <span>₹2,100 / ₹5,000</span>
+          </div>
+          <div class="progress-bar-container">
+            <div class="progress-bar-fill" style="width: 42%;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Charts Section: Canvas Donut & Bar Chart (Requirement F) -->
+      <section class="dashboard-grid">
+        <div class="chart-box">
+          <h3 style="width: 100%; text-align: left; margin-bottom: 1rem;">Spending by Category</h3>
+          <canvas id="categoryPieChart" width="300" height="260" aria-label="Category Spending Donut Chart"></canvas>
+          <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; justify-content: center; margin-top: 1rem; font-size: 0.8rem;">
+            <span><span style="color:#ef4444;">●</span> Food</span>
+            <span><span style="color:#f59e0b;">●</span> Rent</span>
+            <span><span style="color:#4f46e5;">●</span> Travel</span>
+            <span><span style="color:#0ea5e9;">●</span> Bills</span>
+            <span><span style="color:#a855f7;">●</span> Fun</span>
+          </div>
+        </div>
+
+        <div class="chart-box">
+          <h3 style="width: 100%; text-align: left; margin-bottom: 1rem;">Monthly Spending Trend (Last 6 Months)</h3>
+          <canvas id="monthlyBarChart" width="360" height="260" aria-label="Monthly Spending Trend Bar Chart"></canvas>
+          <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem;">Values rendered dynamically using HTML5 Canvas API</p>
+        </div>
+      </section>
+
+      <!-- Recent Transactions Table -->
+      <section class="card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+          <h3>Recent Transactions</h3>
+          <a href="add-expense.html" class="btn btn-outline btn-sm">View All Expenses</a>
+        </div>
+
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Title / Description</th>
+                <th>Category</th>
+                <th>Payment Mode</th>
+                <th>Group / Personal</th>
+                <th>Amount</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>12 Nov 2026</td>
+                <td><strong>Swiggy Dinner Order</strong></td>
+                <td><span class="badge badge-food">Food</span></td>
+                <td>UPI</td>
+                <td>Flatmates</td>
+                <td class="amt-negative">- ₹1,450.00</td>
+                <td><a href="#" style="font-size: 0.85rem;">Edit</a></td>
+              </tr>
+              <tr>
+                <td>10 Nov 2026</td>
+                <td><strong>Uber Airport Cab</strong></td>
+                <td><span class="badge badge-travel">Travel</span></td>
+                <td>Card</td>
+                <td>Goa Trip 2026</td>
+                <td class="amt-negative">- ₹850.00</td>
+                <td><a href="#" style="font-size: 0.85rem;">Edit</a></td>
+              </tr>
+              <tr>
+                <td>08 Nov 2026</td>
+                <td><strong>Settlement from Amit</strong></td>
+                <td><span class="badge badge-other">Settlement</span></td>
+                <td>UPI</td>
+                <td>Flatmates</td>
+                <td class="amt-positive">+ ₹1,200.00</td>
+                <td><span style="font-size: 0.85rem; color: var(--text-muted);">Cleared</span></td>
+              </tr>
+              <tr>
+                <td>05 Nov 2026</td>
+                <td><strong>Apartment Wi-Fi Bill</strong></td>
+                <td><span class="badge badge-bills">Bills</span></td>
+                <td>Net Banking</td>
+                <td>Personal</td>
+                <td class="amt-negative">- ₹999.00</td>
+                <td><a href="#" style="font-size: 0.85rem;">Edit</a></td>
+              </tr>
+              <tr>
+                <td>01 Nov 2026</td>
+                <td><strong>Monthly Flat Rent</strong></td>
+                <td><span class="badge badge-rent">Rent</span></td>
+                <td>Bank Transfer</td>
+                <td>Personal</td>
+                <td class="amt-negative">- ₹9,500.00</td>
+                <td><a href="#" style="font-size: 0.85rem;">Edit</a></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="js/canvas-chart.js"></script>
+</body>
+</html>

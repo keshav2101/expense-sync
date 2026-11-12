@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Expense | ExpenseSync</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/animations.css">
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <header class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="brand-logo">
+        <span class="brand-icon">₹</span>
+        <span>ExpenseSync</span>
+      </a>
+
+      <div class="nav-actions">
+        <button id="themeToggleBtn" class="theme-btn" aria-label="Toggle theme">
+          <span id="themeIcon">🌙</span>
+          <span id="themeLabel">Dark</span>
+        </button>
+        <a href="dashboard.html" class="btn btn-secondary btn-sm">Back to Dashboard</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="app-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <ul class="sidebar-menu">
+        <li><a href="dashboard.html" class="sidebar-link"><span>📊</span> Dashboard</a></li>
+        <li><a href="add-expense.html" class="sidebar-link active"><span>➕</span> Add Expense</a></li>
+        <li><a href="group.html" class="sidebar-link"><span>👥</span> My Groups</a></li>
+        <li><a href="settle-up.html" class="sidebar-link"><span>🤝</span> Settle Up</a></li>
+      </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <div class="content-header">
+        <div>
+          <h2>Record an Expense</h2>
+          <p>Add a personal expense or split it across members of a group.</p>
+        </div>
+      </div>
+
+      <div style="max-width: 800px;">
+        <form class="card animate-fade-in" action="dashboard.html" method="GET" novalidate>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="expenseTitle" class="form-label">Expense Description / Title *</label>
+              <input 
+                type="text" 
+                id="expenseTitle" 
+                name="title" 
+                class="form-control" 
+                placeholder="e.g. Goa Beach Shack Lunch" 
+                required 
+                minlength="3"
+              >
+              <span class="form-hint">Brief title for identification.</span>
+            </div>
+
+            <div class="form-group">
+              <label for="expenseAmount" class="form-label">Total Amount (₹) *</label>
+              <input 
+                type="number" 
+                id="expenseAmount" 
+                name="amount" 
+                class="form-control" 
+                placeholder="0.00" 
+                step="0.01" 
+                min="1" 
+                required
+              >
+              <span class="form-hint">Must be greater than 0.</span>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="category" class="form-label">Category *</label>
+              <select id="category" name="category" class="form-select" required>
+                <option value="FOOD" selected>🍔 Food & Dining</option>
+                <option value="TRAVEL">✈️ Travel & Commute</option>
+                <option value="RENT">🏠 Rent & Accommodation</option>
+                <option value="SHOPPING">🛍️ Shopping</option>
+                <option value="BILLS">💡 Bills & Utilities</option>
+                <option value="ENTERTAINMENT">🎬 Entertainment & Movies</option>
+                <option value="HEALTH">💊 Health & Medical</option>
+                <option value="OTHER">📁 Other / Custom</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="expenseDate" class="form-label">Transaction Date *</label>
+              <input 
+                type="date" 
+                id="expenseDate" 
+                name="date" 
+                class="form-control" 
+                value="2026-11-12" 
+                required
+              >
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="paymentMethod" class="form-label">Payment Method *</label>
+              <select id="paymentMethod" name="paymentMethod" class="form-select" required>
+                <option value="UPI" selected>UPI (GPay / PhonePe / Paytm)</option>
+                <option value="CARD">Debit / Credit Card</option>
+                <option value="CASH">Cash</option>
+                <option value="BANK">Net Banking / NEFT</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="groupSelect" class="form-label">Association</label>
+              <select id="groupSelect" name="group" class="form-select">
+                <option value="PERSONAL">Personal Expense (Not Split)</option>
+                <option value="GOA_TRIP" selected>Group: Goa Trip 2026 (4 members)</option>
+                <option value="FLATMATES">Group: Flatmates B-302 (3 members)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Split Configuration Section (Requirement D) -->
+          <div style="background: var(--bg-tertiary); padding: 1.25rem; border-radius: var(--border-radius); margin-bottom: 1.5rem;">
+            <h4 style="margin-bottom: 0.5rem;">Split Configuration</h4>
+            <p style="font-size: 0.85rem; margin-bottom: 1rem;">Choose how to divide the expense among group members:</p>
+
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1rem;">
+              <label style="display: flex; align-items: center; gap: 0.4rem; cursor: pointer;">
+                <input type="radio" name="splitType" value="EQUAL" checked>
+                <span><strong>1. Equal Split</strong> (1/N each)</span>
+              </label>
+              <label style="display: flex; align-items: center; gap: 0.4rem; cursor: pointer;">
+                <input type="radio" name="splitType" value="EXACT">
+                <span><strong>2. Exact Amounts</strong></span>
+              </label>
+              <label style="display: flex; align-items: center; gap: 0.4rem; cursor: pointer;">
+                <input type="radio" name="splitType" value="PERCENTAGE">
+                <span><strong>3. Percentages (%)</strong></span>
+              </label>
+              <label style="display: flex; align-items: center; gap: 0.4rem; cursor: pointer;">
+                <input type="radio" name="splitType" value="SHARES">
+                <span><strong>4. Shares (Ratio)</strong></span>
+              </label>
+            </div>
+
+            <!-- Live Split Preview Box -->
+            <div style="background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: var(--border-radius-sm); padding: 1rem;">
+              <span style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary);">Live Member Shares (Equal Split Preview for ₹2,400.00):</span>
+              <ul style="list-style: none; margin-top: 0.5rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 0.5rem; font-size: 0.9rem;">
+                <li style="padding: 0.4rem 0.6rem; background: var(--bg-tertiary); border-radius: 4px;">Rahul: <strong>₹600.00</strong></li>
+                <li style="padding: 0.4rem 0.6rem; background: var(--bg-tertiary); border-radius: 4px;">Priya: <strong>₹600.00</strong></li>
+                <li style="padding: 0.4rem 0.6rem; background: var(--bg-tertiary); border-radius: 4px;">Amit: <strong>₹600.00</strong></li>
+                <li style="padding: 0.4rem 0.6rem; background: var(--bg-tertiary); border-radius: 4px;">Sneha: <strong>₹600.00</strong></li>
+              </ul>
+              <small style="display: block; margin-top: 0.4rem; color: var(--text-muted);">
+                * Penny/Paise rounding is absorbed by the payer automatically to ensure total sum equals ₹2,400.00 exact.
+              </small>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="notes" class="form-label">Notes / Memo</label>
+            <textarea id="notes" name="notes" rows="2" class="form-control" placeholder="Optional details (e.g. Shack bill included cold beverages)"></textarea>
+          </div>
+
+          <div class="form-group" style="display: flex; align-items: center; gap: 0.5rem;">
+            <input type="checkbox" id="isRecurring" name="isRecurring">
+            <label for="isRecurring" style="font-size: 0.9rem; color: var(--text-secondary); cursor: pointer;">
+              Mark as <strong>Recurring Expense</strong> (e.g. Monthly rent, subscriptions)
+            </label>
+          </div>
+
+          <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 1rem;">
+            <a href="dashboard.html" class="btn btn-secondary">Cancel</a>
+            <button type="submit" class="btn btn-primary">Save Expense</button>
+          </div>
+        </form>
+      </div>
+    </main>
+  </div>
+
+  <script src="js/canvas-chart.js"></script>
+</body>
+</html>

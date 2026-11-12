@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="ExpenseSync - Smart Expense Tracker & Splitwise-style Bill Splitting Web Application">
+  <title>ExpenseSync | Smart Expense Tracker & Bill Splitting</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/animations.css">
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <header class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="brand-logo">
+        <span class="brand-icon">₹</span>
+        <span>ExpenseSync</span>
+      </a>
+
+      <nav>
+        <ul class="nav-links">
+          <li class="nav-item"><a href="index.html" class="active">Home</a></li>
+          <li class="nav-item"><a href="dashboard.html">Dashboard</a></li>
+          <li class="nav-item"><a href="add-expense.html">Add Expense</a></li>
+          <li class="nav-item"><a href="group.html">Groups</a></li>
+          <li class="nav-item"><a href="settle-up.html">Settle Up</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-actions">
+        <button id="themeToggleBtn" class="theme-btn" aria-label="Toggle theme">
+          <span id="themeIcon">🌙</span>
+          <span id="themeLabel">Dark</span>
+        </button>
+        <a href="login.html" class="btn btn-secondary btn-sm">Log In</a>
+        <a href="register.html" class="btn btn-primary btn-sm">Get Started</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <main class="container">
+    <section class="hero animate-slide-up">
+      <div class="hero-content">
+        <h1>Track personal budgets. Split group bills seamlessly.</h1>
+        <p class="hero-subtitle">
+          Say goodbye to awkward balance calculations. ExpenseSync simplifies shared debts,
+          tracks personal category spending, and computes the minimum cash flows to settle up in seconds.
+        </p>
+        <div class="hero-cta">
+          <a href="register.html" class="btn btn-primary">Start Free Today</a>
+          <a href="dashboard.html" class="btn btn-secondary">Explore Demo Dashboard</a>
+        </div>
+      </div>
+
+      <div class="hero-card-preview interactive-card">
+        <h3>Live Debt Simplification</h3>
+        <p class="text-muted">Algorithm preview: 3 complex group debts reduced to 1 transaction.</p>
+        <div class="alert alert-success">
+          <strong>✓ Min-Cash-Flow Optimized:</strong><br>
+          Karan pays Priya ₹1,250 directly (Rahul's balance auto-settled).
+        </div>
+        <div class="progress-header">
+          <span>Monthly Budget Used</span>
+          <span><strong>82% (₹20,500 / ₹25,000)</strong></span>
+        </div>
+        <div class="progress-bar-container">
+          <div class="progress-bar-fill warning" style="width: 82%;"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Key Features Section -->
+    <section class="features-section">
+      <div style="text-align: center; max-width: 650px; margin: 0 auto;">
+        <h2>Engineered for Transparency & Precision</h2>
+        <p>Built as part of 21CSE354T Full Stack Web Development (SRMIST).</p>
+      </div>
+
+      <div class="features-grid">
+        <article class="feature-box">
+          <div class="feature-icon">📊</div>
+          <h3>Personal Expense Tracker</h3>
+          <p>Categorize transactions into Food, Travel, Rent, and Utilities with instant monthly spending charts and CSV reports.</p>
+        </article>
+
+        <article class="feature-box">
+          <div class="feature-icon">👥</div>
+          <h3>Splitwise-Style Bill Splitting</h3>
+          <p>Split bills 4 ways: Equal, Exact amounts, Percentages, or Shares with zero fractional paise/cent rounding discrepancies.</p>
+        </article>
+
+        <article class="feature-box">
+          <div class="feature-icon">⚡</div>
+          <h3>Greedy Debt Simplification</h3>
+          <p>Our mathematical algorithm minimizes total settlement transactions across large groups with circular debts.</p>
+        </article>
+
+        <article class="feature-box">
+          <div class="feature-icon">⚠️</div>
+          <h3>Smart Budget Overspend Warnings</h3>
+          <p>Dynamic 80% caution thresholds and 100% hard over-budget alerts to keep your monthly savings on target.</p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container footer-content">
+      <p>© 2026 ExpenseSync - 21CSE354T Full Stack Web Development Project | SRMIST</p>
+      <div>
+        <a href="dashboard.html">Dashboard</a> | 
+        <a href="login.html">Login</a> | 
+        <a href="register.html">Register</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/canvas-chart.js"></script>
+</body>
+</html>
