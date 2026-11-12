@@ -1,0 +1,84 @@
+version: '3.8'
+
+services:
+  # MySQL Database Container
+  mysql-db:
+    image: mysql:8.0
+    container_name: expensesync-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: expensesync_db
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ../unit-3/sql/schema.sql:/docker-entrypoint-initdb.d/1-schema.sql
+      - ../unit-3/sql/seed.sql:/docker-entrypoint-initdb.d/2-seed.sql
+    networks:
+      - expensesync-network
+
+  # Core Spring Boot Service (Port 8080)
+  core-service:
+    build:
+      context: ./backend
+      dockerfile_inline: |
+        FROM eclipse-temurin:17-jdk-alpine
+        WORKDIR /app
+        COPY . .
+        RUN ./mvnw clean package -DskipTests || mvn clean package -DskipTests || true
+        CMD ["java", "-Dspring.profiles.active=mysql", "-jar", "target/core-service-1.0.0.jar"]
+    container_name: expensesync-core
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: mysql
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db:3306/expensesync_db?useSSL=false&allowPublicKeyRetrieval=true
+      ANALYTICS_SERVICE_URL: http://analytics-service:8082/api/analytics
+    depends_on:
+      - mysql-db
+    networks:
+      - expensesync-network
+
+  # Analytics Microservice (Port 8082)
+  analytics-service:
+    build:
+      context: ./analytics-service
+      dockerfile_inline: |
+        FROM eclipse-temurin:17-jdk-alpine
+        WORKDIR /app
+        COPY . .
+        RUN ./mvnw clean package -DskipTests || mvn clean package -DskipTests || true
+        CMD ["java", "-jar", "target/analytics-service-1.0.0.jar"]
+    container_name: expensesync-analytics
+    ports:
+      - "8082:8082"
+    networks:
+      - expensesync-network
+
+  # Frontend Client (Port 5173 / 80)
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile_inline: |
+        FROM node:20-alpine
+        WORKDIR /app
+        COPY package*.json ./
+        RUN npm install
+        COPY . .
+        EXPOSE 5173
+        CMD ["npm", "run", "dev", "--", "--host"]
+    container_name: expensesync-frontend
+    ports:
+      - "5173:5173"
+    depends_on:
+      - core-service
+    networks:
+      - expensesync-network
+
+volumes:
+  mysql-data:
+
+networks:
+  expensesync-network:
+    driver: bridge

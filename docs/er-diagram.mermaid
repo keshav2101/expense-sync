@@ -1,0 +1,86 @@
+erDiagram
+    USERS ||--o{ GROUPS : "creates"
+    USERS ||--o{ GROUP_MEMBERS : "belongs to"
+    GROUPS ||--o{ GROUP_MEMBERS : "contains"
+    USERS ||--o{ EXPENSES : "pays for"
+    CATEGORIES ||--o{ EXPENSES : "classifies"
+    GROUPS ||--o{ EXPENSES : "associates"
+    EXPENSES ||--o{ EXPENSE_SPLITS : "is divided into"
+    USERS ||--o{ EXPENSE_SPLITS : "owes share"
+    GROUPS ||--o{ SETTLEMENTS : "records"
+    USERS ||--o{ SETTLEMENTS : "pays/receives"
+    USERS ||--o{ BUDGETS : "defines"
+    CATEGORIES ||--o{ BUDGETS : "limits"
+
+    USERS {
+        bigint id PK
+        varchar name
+        varchar email UK
+        varchar password_hash
+        varchar default_currency
+        timestamp created_at
+    }
+
+    GROUPS {
+        bigint id PK
+        varchar name
+        varchar type
+        bigint created_by FK
+        timestamp created_at
+    }
+
+    GROUP_MEMBERS {
+        bigint group_id PK,FK
+        bigint user_id PK,FK
+        timestamp joined_at
+    }
+
+    CATEGORIES {
+        bigint id PK
+        varchar name UK
+        varchar icon
+        boolean is_default
+    }
+
+    EXPENSES {
+        bigint id PK
+        varchar title
+        decimal amount
+        bigint category_id FK
+        bigint paid_by FK
+        bigint group_id FK
+        date expense_date
+        varchar payment_method
+        text notes
+        boolean is_recurring
+        timestamp created_at
+    }
+
+    EXPENSE_SPLITS {
+        bigint id PK
+        bigint expense_id FK
+        bigint user_id FK
+        varchar split_type
+        decimal share_amount
+        decimal percentage
+        int shares
+    }
+
+    SETTLEMENTS {
+        bigint id PK
+        bigint group_id FK
+        bigint payer_id FK
+        bigint payee_id FK
+        decimal amount
+        varchar payment_method
+        varchar notes
+        timestamp settled_at
+    }
+
+    BUDGETS {
+        bigint id PK
+        bigint user_id FK
+        bigint category_id FK
+        decimal monthly_limit
+        varchar month_year
+    }

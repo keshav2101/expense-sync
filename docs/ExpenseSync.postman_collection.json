@@ -1,0 +1,153 @@
+{
+  "info": {
+    "name": "ExpenseSync Unit 4 REST API Collection",
+    "description": "Postman test collection covering all Unit 4 Spring Boot REST API endpoints: Expenses, Groups, Splits, Debt Simplification, and Settlements.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Expenses",
+      "item": [
+        {
+          "name": "Get All Expenses",
+          "request": {
+            "method": "GET",
+            "url": "http://localhost:8080/api/expenses"
+          }
+        },
+        {
+          "name": "Filter Expenses by Category",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:8080/api/expenses?category=FOOD&paymentMethod=UPI",
+              "query": [
+                { "key": "category", "value": "FOOD" },
+                { "key": "paymentMethod", "value": "UPI" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Expense by ID",
+          "request": {
+            "method": "GET",
+            "url": "http://localhost:8080/api/expenses/1"
+          }
+        },
+        {
+          "name": "Create Personal Expense",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Blue Tokai Coffee & Croissant\",\n  \"amount\": 380.00,\n  \"category\": \"FOOD\",\n  \"paidBy\": 1,\n  \"date\": \"2026-11-12\",\n  \"paymentMethod\": \"UPI\",\n  \"notes\": \"Quick breakfast\",\n  \"isRecurring\": false\n}"
+            },
+            "url": "http://localhost:8080/api/expenses"
+          }
+        },
+        {
+          "name": "Create Group Expense with Equal Split",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Goa Ferry & Water Taxi\",\n  \"amount\": 1200.00,\n  \"category\": \"TRAVEL\",\n  \"paidBy\": 1,\n  \"groupId\": 1,\n  \"date\": \"2026-11-12\",\n  \"paymentMethod\": \"CASH\",\n  \"splitType\": \"EQUAL\",\n  \"splits\": [\n    { \"userId\": 1, \"userName\": \"Rahul\" },\n    { \"userId\": 2, \"userName\": \"Priya\" },\n    { \"userId\": 3, \"userName\": \"Amit\" },\n    { \"userId\": 4, \"userName\": \"Sneha\" }\n  ]\n}"
+            },
+            "url": "http://localhost:8080/api/expenses"
+          }
+        },
+        {
+          "name": "Update Expense",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Monthly Apartment Rent (Updated with Maintenance)\",\n  \"amount\": 10500.00,\n  \"category\": \"RENT\",\n  \"paidBy\": 1,\n  \"date\": \"2026-11-01\",\n  \"paymentMethod\": \"BANK\",\n  \"notes\": \"Included water & parking charges\",\n  \"isRecurring\": true\n}"
+            },
+            "url": "http://localhost:8080/api/expenses/1"
+          }
+        },
+        {
+          "name": "Delete Expense",
+          "request": {
+            "method": "DELETE",
+            "url": "http://localhost:8080/api/expenses/2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Groups & Simplification",
+      "item": [
+        {
+          "name": "Get All Groups",
+          "request": {
+            "method": "GET",
+            "url": "http://localhost:8080/api/groups"
+          }
+        },
+        {
+          "name": "Get Group by ID",
+          "request": {
+            "method": "GET",
+            "url": "http://localhost:8080/api/groups/1"
+          }
+        },
+        {
+          "name": "Create Group",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Hackathon Team Alpha\",\n  \"type\": \"OTHER\",\n  \"createdBy\": 1,\n  \"memberEmails\": [\"vikram@example.com\", \"ananya@example.com\"]\n}"
+            },
+            "url": "http://localhost:8080/api/groups"
+          }
+        },
+        {
+          "name": "Get Group Simplified Debts (Min-Cash-Flow)",
+          "request": {
+            "method": "GET",
+            "url": "http://localhost:8080/api/groups/1/simplified-debts"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Settlements & Budgets",
+      "item": [
+        {
+          "name": "Record Settle Up Payment",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"groupId\": 1,\n  \"payerId\": 1,\n  \"payeeId\": 2,\n  \"amount\": 1250.00,\n  \"paymentMethod\": \"UPI\",\n  \"notes\": \"Clearing Goa Trip villa balance\"\n}"
+            },
+            "url": "http://localhost:8080/api/settlements"
+          }
+        },
+        {
+          "name": "Get Budgets",
+          "request": {
+            "method": "GET",
+            "url": "http://localhost:8080/api/budgets"
+          }
+        },
+        {
+          "name": "Update Category Budget",
+          "request": {
+            "method": "PUT",
+            "url": "http://localhost:8080/api/budgets/FOOD?limit=6500.00"
+          }
+        }
+      ]
+    }
+  ]
+}
