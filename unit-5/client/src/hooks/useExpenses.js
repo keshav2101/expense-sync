@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo, useDebugValue } from 'react';
 import initialExpenses from '../data/mockExpenses.json';
+import { useAuth } from '../context/AuthContext';
 
 const DEFAULT_BUDGETS = {
   OVERALL: 30000,
@@ -14,39 +15,70 @@ const DEFAULT_BUDGETS = {
 };
 
 export function useExpenses() {
+  const { user } = useAuth();
+  const userId = user?.id || 1;
+  const storageKey = `expensesync-expenses-u${userId}`;
+  const budgetKey = `expensesync-budgets-u${userId}`;
+
   const [expenses, setExpenses] = useState(() => {
-    const saved = localStorage.getItem('expensesync-expenses');
-    return saved ? JSON.parse(saved) : initialExpenses;
+    try {
+      const saved = localStorage.getItem(storageKey);
+      if (saved) return JSON.parse(saved);
+      // User 1 (Rahul) gets seeded expenses; new users get empty list
+      return userId === 1 ? initialExpenses : [];
+    } catch {
+      return userId === 1 ? initialExpenses : [];
+    }
   });
 
   const [budgets, setBudgets] = useState(() => {
-    const saved = localStorage.getItem('expensesync-budgets');
-    return saved ? JSON.parse(saved) : DEFAULT_BUDGETS;
+    try {
+      const saved = localStorage.getItem(budgetKey);
+      return saved ? JSON.parse(saved) : DEFAULT_BUDGETS;
+    } catch {
+      return DEFAULT_BUDGETS;
+    }
   });
+
+  // Re-sync if user switches
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(storageKey);
+      if (saved) {
+        setExpenses(JSON.parse(saved));
+      } else {
+        setExpenses(userId === 1 ? initialExpenses : []);
+      }
+    } catch {
+      setExpenses(userId === 1 ? initialExpenses : []);
+    }
+  }, [userId]);
 
   // Filter & Search states
   const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('ALL');
   const [paymentFilter, setPaymentFilter] = useState('ALL');
-  const [sortBy, setSortBy] = useState('date-desc'); // 'date-desc' | 'date-asc' | 'amount-desc' | 'amount-asc'
+  const [sortBy, setSortBy] = useState('date-desc');
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 6;
 
   // Persist to localStorage
   useEffect(() => {
-    localStorage.setItem('expensesync-expenses', JSON.stringify(expenses));
-  }, [expenses]);
+    localStorage.setItem(storageKey, JSON.stringify(expenses));
+  }, [expenses, storageKey]);
 
   useEffect(() => {
-    localStorage.setItem('expensesync-budgets', JSON.stringify(budgets));
-  }, [budgets]);
+    localStorage.setItem(budgetKey, JSON.stringify(budgets));
+  }, [budgets, budgetKey]);
 
   // CRUD Operations
   const addExpense = (newExp) => {
     const expenseWithId = {
       ...newExp,
       id: Date.now(),
-      amount: parseFloat(newExp.amount) || 0
+      amount: parseFloat(newExp.amount) || 0,
+      date: newExp.date || new Date().toISOString().slice(0, 10),
+      paymentMethod: newExp.paymentMethod || 'UPI'
     };
     setExpenses((prev) => [expenseWithId, ...prev]);
     return expenseWithId;
@@ -70,9 +102,11 @@ export function useExpenses() {
   const filteredExpenses = useMemo(() => {
     return expenses
       .filter((exp) => {
+        const title = exp.title || '';
+        const notes = exp.notes || '';
         const matchesSearch =
-          exp.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          (exp.notes && exp.notes.toLowerCase().includes(searchTerm.toLowerCase()));
+          title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          notes.toLowerCase().includes(searchTerm.toLowerCase());
         const matchesCategory = categoryFilter === 'ALL' || exp.category === categoryFilter;
         const matchesPayment = paymentFilter === 'ALL' || exp.paymentMethod === paymentFilter;
         return matchesSearch && matchesCategory && matchesPayment;
@@ -111,7 +145,7 @@ export function useExpenses() {
   const getBudgetStatus = (category) => {
     const spent = categoryTotals[category] || 0;
     const limit = budgets[category] || budgets.OTHER;
-    const percentage = Math.round((spent / limit) * 100);
+    const percentage = limit > 0 ? Math.round((spent / limit) * 100) : 0;
 
     let status = 'NORMAL';
     if (percentage >= 100) status = 'ALERT';
@@ -122,9 +156,9 @@ export function useExpenses() {
 
   // Export to CSV Function
   const exportToCSV = () => {
-    const headers = ['ID,Title,Category,Amount,Date,PaymentMethod,IsRecurring,Notes'];
+    const headers = ['Date,Category,Description,Amount,PaymentMethod,Status'];
     const rows = expenses.map((exp) =>
-      `"${exp.id}","${exp.title}","${exp.category}",${exp.amount},"${exp.date}","${exp.paymentMethod}",${exp.isRecurring},"${exp.notes || ''}"`
+      `"${exp.date}","${exp.category}","${exp.title.replace(/"/g, '""')}",${exp.amount.toFixed(2)},"${exp.paymentMethod || 'UPI'}","PAID"`
     );
     const csvContent = 'data:text/csv;charset=utf-8,' + [headers, ...rows].join('\n');
     const encodedUri = encodeURI(csvContent);
@@ -136,7 +170,6 @@ export function useExpenses() {
     document.body.removeChild(link);
   };
 
-  // Expose React DevTools debug label (Syllabus requirement)
   useDebugValue(`Expenses: ${expenses.length} items (Total: ₹${totalMonthlySpent.toFixed(2)})`);
 
   return {

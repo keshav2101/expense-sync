@@ -5,7 +5,7 @@ import { useAuth } from '../context/AuthContext';
 
 export default function Navbar() {
   const { theme, toggleTheme } = useTheme();
-  const { user, updateProfile, logout } = useAuth();
+  const { user, updateProfile, logout, isAuthenticated } = useAuth();
   const location = useLocation();
 
   const handleCurrencyChange = (e) => {
@@ -22,16 +22,18 @@ export default function Navbar() {
 
         <div className="nav-actions">
           {/* Currency Selector */}
-          <select 
-            value={user.currency} 
-            onChange={handleCurrencyChange}
-            className="currency-select"
-            title="Choose default display currency"
-          >
-            <option value="INR">₹ INR</option>
-            <option value="USD">$ USD</option>
-            <option value="EUR">€ EUR</option>
-          </select>
+          {isAuthenticated && (
+            <select
+              value={user?.currency || 'INR'}
+              onChange={handleCurrencyChange}
+              className="currency-select"
+              title="Choose default display currency"
+            >
+              <option value="INR">₹ INR</option>
+              <option value="USD">$ USD</option>
+              <option value="EUR">€ EUR</option>
+            </select>
+          )}
 
           {/* Dark / Light Mode Switcher */}
           <button onClick={toggleTheme} className="theme-btn" aria-label="Toggle theme">
@@ -39,17 +41,30 @@ export default function Navbar() {
             <span>{theme === 'dark' ? 'Light' : 'Dark'}</span>
           </button>
 
-          {/* User Profile Pill */}
-          <div className="user-profile-badge">
-            <div className="avatar-circle">
-              {user.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
-            </div>
-            <span className="user-name">{user.name}</span>
-          </div>
+          {isAuthenticated ? (
+            <>
+              {/* User Profile Pill */}
+              <div className="user-profile-badge">
+                <div className="avatar-circle">
+                  {(user?.name || 'U').split(' ').map((n) => n[0]).join('').slice(0, 2)}
+                </div>
+                <span className="user-name">{user?.name}</span>
+              </div>
 
-          <button onClick={logout} className="btn btn-secondary btn-sm">
-            Logout
-          </button>
+              <button onClick={logout} className="btn btn-secondary btn-sm">
+                Logout
+              </button>
+            </>
+          ) : (
+            <div style={{ display: 'flex', gap: '0.5rem' }}>
+              <Link to="/login" className="btn btn-secondary btn-sm">
+                Sign In
+              </Link>
+              <Link to="/register" className="btn btn-primary btn-sm">
+                Register
+              </Link>
+            </div>
+          )}
         </div>
       </div>
     </header>

@@ -68,7 +68,23 @@ open index.html
 
 ---
 
-## 6. Assumptions
+## 6. Screenshots
+
+| Page / State | Preview | Caption |
+| :--- | :--- | :--- |
+| **Landing Page** | ![Landing Page](screenshots/01-landing-page.png) | Responsive landing page with features overview and navigation |
+| **Login Page** | ![Login Page](screenshots/02-login-page.png) | Form-validated authentication screen |
+| **Register Page** | ![Register Page](screenshots/03-register-page.png) | New user onboarding with currency preference selector |
+| **Dashboard** | ![Dashboard](screenshots/04-dashboard.png) | Metric cards, Canvas donut chart, and 80% category budget warning |
+| **Add Expense** | ![Add Expense](screenshots/05-add-expense.png) | Expense logging form with payment method and category selection |
+| **Group Page** | ![Group Page](screenshots/06-group-page.png) | Group feed with member balances and activity log |
+| **Settle Up** | ![Settle Up](screenshots/07-settle-up.png) | Payment recording interface with settlement history |
+| **Dark Mode** | ![Dark Mode](screenshots/08-dark-mode.png) | Seamless theme transition via CSS custom properties |
+| **Mobile Layout** | ![Mobile Layout](screenshots/09-mobile-layout.png) | Responsive mobile view rendered at 375px width |
+
+---
+
+## 7. Assumptions
 * **Currency**: The primary default currency is Indian Rupee (INR - ₹).
 * **Scope**: Unit 1 focuses strictly on static HTML5 semantic layout and CSS styling; no client-side JavaScript calculation frameworks or backend servers are used.
 * **Canvas Charting**: HTML5 2D Canvas is used for zero-dependency charting instead of external SVG/Chart.js libraries.
@@ -76,7 +92,7 @@ open index.html
 
 ---
 
-## 7. Viva Q&A (5 Key Questions)
+## 8. Viva Q&A (5 Key Questions)
 
 ### Q1: What is the CSS Box Model, and why is `box-sizing: border-box;` considered a best practice?
 **Answer:** The CSS Box Model comprises four concentric rectangular layers around every element: **Content**, **Padding**, **Border**, and **Margin**. By default (`box-sizing: content-box`), padding and borders add to the specified width and height, causing unexpected layout overflows. Setting `box-sizing: border-box` includes padding and borders inside the declared width/height, making responsive layouts predictable and easier to calculate.

@@ -86,14 +86,26 @@ npm run build
 
 ---
 
-## 6. Assumptions
+## 6. Screenshots
+
+| Component | Preview | Caption |
+| :--- | :--- | :--- |
+| **Vanilla JS Split Calculator** | ![Vanilla JS](screenshots/01-vanilla-js-split-calculator.png) | Pure JavaScript split calculator with live mathematical rounding and canvas confetti |
+| **React Dashboard** | ![React Dashboard](screenshots/02-react-dashboard.png) | Metric cards, budget progress meters, and dynamic SVG donut chart |
+| **React Expenses Tracker** | ![React Expenses](screenshots/03-react-expenses.png) | Expense table with search, category filtering, sorting, pagination, and CSV export |
+| **Group Detail & Split Preview** | ![Group Detail](screenshots/04-react-group-split-preview.png) | Splitwise group feed with 4 split types and live per-person share preview |
+| **Settle Up Modal** | ![Settle Up](screenshots/05-react-settle-up.png) | Interactive balance settlement form updating net member debts |
+
+---
+
+## 7. Assumptions
 * **Rounding Mechanics**: In financial splits with fractional divisions (e.g. ₹100 split 3 ways = ₹33.33 each), the remaining ₹0.01 is allocated to the last member so total shares equal the exact bill amount.
 * **State Persistence**: In Part B, expenses and groups hydrate from bundled mock JSON files and persist to browser `localStorage` to emulate stateful REST operations prior to database connection.
 * **Auth Emulation**: Authentication in Unit 2 is simulated using an `AuthContext` provider with a mock JWT string.
 
 ---
 
-## 7. Viva Q&A (5 Key Questions)
+## 8. Viva Q&A (5 Key Questions)
 
 ### Q1: What are the Rules of Hooks in React, and why do they exist?
 **Answer:**

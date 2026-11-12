@@ -139,7 +139,18 @@ erDiagram
 
 ---
 
-## 2. Syllabus Mapping (21CSE354T Full Stack Web Development)
+## 2. Visual Walkthrough & System Screenshots
+
+| View | Screenshot | Description |
+| :--- | :--- | :--- |
+| **Financial Dashboard** | ![Financial Dashboard](unit-5/screenshots/02-dashboard-personal-budgets.png) | Personal budget meters, spending summary cards, category donut chart, and 80% caution alerts |
+| **Splitwise Bill Splitting** | ![Group Debt Simplification](unit-5/screenshots/05-group-detail-simplified-debts.png) | Group expense feed, live 4-method split preview, and greedy minimum-cash-flow simplified debts |
+| **Microservice Analytics** | ![Microservice Analytics](unit-5/screenshots/07-microservice-analytics-report.png) | Dedicated microservice (`analytics-service`: 8082) monthly spending breakdown and insights |
+| **Mobile Responsive UI** | ![Mobile Responsive View](unit-5/screenshots/09-mobile-responsive-view.png) | High-contrast, touch-optimized responsive layout tested across mobile viewports (375px) |
+
+---
+
+## 3. Syllabus Mapping (21CSE354T Full Stack Web Development)
 
 | Unit | Syllabus Module & Hours | Project Component | Path | Key Concepts Demonstrated |
 | :--- | :--- | :--- | :--- | :--- |
@@ -153,7 +164,7 @@ erDiagram
 
 ---
 
-## 3. Core Features Breakdown
+## 4. Core Features Breakdown
 
 ### A. User & Authentication
 * Multi-user registration with validation (valid email, 8+ character password, unique constraint).
@@ -189,7 +200,7 @@ erDiagram
 
 ---
 
-## 4. REST API Endpoints Overview
+## 5. REST API Endpoints Overview
 
 | Method | Endpoint | Description | Service | Port |
 | :--- | :--- | :--- | :--- | :--- |
@@ -209,7 +220,7 @@ erDiagram
 
 ---
 
-## 5. Environment Setup & Prerequisites
+## 6. Environment Setup & Prerequisites
 
 ### Required Tooling
 * **Java**: JDK 17 or higher
@@ -260,7 +271,7 @@ winget install Oracle.MySQL
 
 ---
 
-## 6. Quick Start Guide
+## 7. Quick Start Guide
 
 ### Running Unit by Unit
 
@@ -326,7 +337,7 @@ docker-compose up --build
 
 ---
 
-## 7. 3-Minute Examiner Demo Script
+## 8. 3-Minute Examiner Demo Script
 
 Follow this sequential walkthrough during the laboratory viva or project evaluation:
 
@@ -368,7 +379,7 @@ Follow this sequential walkthrough during the laboratory viva or project evaluat
 
 ---
 
-## 8. Seed Demo Credentials
+## 9. Seed Demo Credentials
 
 | Role | Name | Email | Password |
 | :--- | :--- | :--- | :--- |
@@ -379,7 +390,7 @@ Follow this sequential walkthrough during the laboratory viva or project evaluat
 
 ---
 
-## 9. Known Technical Limitations & Honest Disclosures
+## 10. Known Technical Limitations & Honest Disclosures
 
 In the spirit of rigorous academic engineering, the following limitations are noted:
 1. **Microservice Service Discovery**: Services currently communicate via configured host/port URIs (`http://localhost:8082`). An enterprise Netflix Eureka discovery server or Spring Cloud Consul was omitted to keep the college lab build lightweight and avoid excessive memory overhead.
@@ -388,13 +399,13 @@ In the spirit of rigorous academic engineering, the following limitations are no
 
 ---
 
-## 10. Future Scope
+## 11. Future Scope
 * **OCR Receipt Scanner**: Automated expense digitization using Google Cloud Vision API.
 * **WebSocket Live Feed**: Real-time push updates for instant group settlement notifications.
 * **Native UPI Deep-Linking**: Integration with `upi://pay` URI schemes for immediate mobile banking app settlement.
 
 ---
 
-## 8. License & Academic Attribution
+## 12. License & Academic Attribution
 Developed as an academic capstone submission for **21CSE354T Full Stack Web Development** at **SRM Institute of Science and Technology**. Released under the [MIT License](LICENSE).
 

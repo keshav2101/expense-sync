@@ -189,7 +189,24 @@ curl -X GET "http://localhost:8080/api/reports/analytics?userId=1&monthYear=2026
 
 ---
 
-## 7. Assumptions
+## 7. Screenshots
+
+| Screen / Feature | Preview | Caption |
+| :--- | :--- | :--- |
+| **JWT Login Screen** | ![Login Screen](screenshots/01-login-screen.png) | Spring Security stateless JWT authentication with demo credentials autofill |
+| **Dashboard & Budgets** | ![Dashboard](screenshots/02-dashboard-personal-budgets.png) | Metrics overview, category budget warnings, and live personal spending bars |
+| **Personal Expense Tracker** | ![Personal Expense Tracker](screenshots/03-expenses-tracker-crud.png) | Full CRUD expense manager with instant search, category filters, and pagination |
+| **Splitwise Groups** | ![Groups Overview](screenshots/04-groups-overview.png) | Shared expense groups with live balances and membership management |
+| **Group Detail & Debt Simplification** | ![Simplified Debts](screenshots/05-group-detail-simplified-debts.png) | Live split calculator preview (all 4 split types) and greedy min-cash-flow algorithm |
+| **Settle Up Modal** | ![Settle Up](screenshots/06-settle-up-balances.png) | Peer-to-peer balance settlement with automatic net balance recalculation |
+| **Analytics Microservice Report** | ![Analytics Microservice](screenshots/07-microservice-analytics-report.png) | Synchronous REST reporting from `analytics-service` (Port 8082) via `core-service` (Port 8080) |
+| **CSV Export Stream** | ![CSV Export](screenshots/08-csv-export-download.png) | Microservice-generated CSV stream download of user expense data |
+| **Mobile Responsive Layout** | ![Mobile Layout](screenshots/09-mobile-responsive-view.png) | Responsive mobile viewport rendering tested at 375px width |
+| **Dark Theme** | ![Dark Theme](screenshots/10-dark-mode-theme.png) | System-wide high-contrast dark theme mode toggle |
+
+---
+
+## 8. Assumptions
 * **Port Allocation**: `core-service` runs on port 8080; `analytics-service` runs on port 8082; `client` runs on port 5173.
 * **Database Profile**: Active profile is `h2` by default for zero-setup execution with automated demo seeding (`DataInitializer.java`). It can be toggled to `mysql` via `-Dspring.profiles.active=mysql`.
 * **Inter-Service Resilience**: `core-service` includes a circuit-breaker fallback in `AnalyticsClientService` so that if `analytics-service` is temporarily offline, the core application continues functioning smoothly.
@@ -197,7 +214,7 @@ curl -X GET "http://localhost:8080/api/reports/analytics?userId=1&monthYear=2026
 
 ---
 
-## 8. Viva Q&A (5 Key Questions)
+## 9. Viva Q&A (5 Key Questions)
 
 ### Q1: What are the benefits of migrating from a monolith to microservices?
 **Answer:**

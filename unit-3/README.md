@@ -111,14 +111,24 @@ Sneha Rao            | ₹0.00        | ₹5212.50     | - ₹5212.50 (Owes grou
 
 ---
 
-## 6. Assumptions
+## 6. Screenshots
+
+| Output / Execution | Preview | Caption |
+| :--- | :--- | :--- |
+| **CLI Menu & Schema Init** | ![CLI Menu](screenshots/01-jdbc-cli-menu-and-schema.png) | Interactive terminal menu and automated schema execution |
+| **CRUD Execution** | ![CRUD Execution](screenshots/02-jdbc-crud-execution.png) | PreparedStatement parameterized insertion and ResultSet table formatting |
+| **Group Balances & Subqueries** | ![Balances Subqueries](screenshots/03-jdbc-group-balances-subqueries.png) | Multi-table JOIN and aggregate subqueries computing net member debts |
+
+---
+
+## 7. Assumptions
 * **Dual Database Mode**: Embedded H2 running in MySQL Compatibility Mode (`MODE=MySQL`) is the default fallback so evaluators can run the console app without installing or starting a local MySQL server.
 * **Personal vs. Group Association**: Personal transactions have `group_id = NULL`; group transactions link to an active group foreign key.
 * **Passwords**: Password hashes seeded in `seed.sql` are generated using BCrypt for the test password `Password@123`.
 
 ---
 
-## 7. Viva Q&A (5 Key Questions)
+## 8. Viva Q&A (5 Key Questions)
 
 ### Q1: What is the difference between `Statement` and `PreparedStatement` in JDBC?
 **Answer:**

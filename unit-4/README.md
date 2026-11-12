@@ -158,7 +158,17 @@ curl -X POST http://localhost:8080/api/expenses \
 
 ---
 
-## 6. Assumptions
+## 6. Screenshots
+
+| Output / Execution | Preview | Caption |
+| :--- | :--- | :--- |
+| **JUnit 5 Passing Tests** | ![JUnit 5 Tests](screenshots/01-junit5-tests-passing.png) | 6 automated JUnit 5 test cases passing (linear, circular, uneven, and rounding tests) |
+| **Postman API Simplified Debts** | ![Postman API](screenshots/02-postman-api-test-debts.png) | REST API JSON response for minimum cash flow greedy debt simplification |
+| **Layered Architecture Execution** | ![Architecture](screenshots/03-layered-architecture-api.png) | Three-tier Controller-Service-Repository interaction and sample HTTP request |
+
+---
+
+## 7. Assumptions
 * **Open Endpoints**: REST endpoints in Unit 4 are intentionally unauthenticated (no JWT enforcement) to focus purely on three-tier architecture, Bean Validation, and service algorithms; JWT security is applied in Unit 5.
 * **Algorithm Heuristic**: The greedy minimum-cash-flow algorithm assumes that all participants in a group belong to a single connected balance graph and simplifies debts to at most $N-1$ settlement transfers.
 * **Precision**: Monetary figures use `java.math.BigDecimal` with 2 decimal places (`RoundingMode.HALF_UP` / `RoundingMode.FLOOR`) to eliminate IEEE-754 binary floating-point drift.
