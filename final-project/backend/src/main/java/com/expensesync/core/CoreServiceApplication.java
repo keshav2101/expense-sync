@@ -10,3 +10,4 @@ public class CoreServiceApplication {
         SpringApplication.run(CoreServiceApplication.class, args);
     }
 }
+

@@ -335,31 +335,34 @@ Follow this sequential walkthrough during the laboratory viva or project evaluat
 1. Open http://localhost:5173 and log in with demo credentials:
    Email: rahul@example.com | Password: Password@123
 2. Point out the Financial Overview dashboard:
-   - 4 Metric cards (Total Spent: ₹19,000, You Owe: ₹1,250, You are Owed: ₹3,850).
-   - Dynamic 80% caution indicator and 100% overspend alerts on category meters.
-   - Live SVG Category Donut chart and 6-month spending trends.
+   - 4 Metric cards (Total Monthly Spent: ₹19,000.00, Budget Limit: ₹25,000.00, Budget Used: 76.0%).
+   - Category meters: Food (₹4,200 / ₹5,000 at 84% amber caution), Rent (₹9,500 / ₹12,000 at 79%).
+   - Live Category Donut chart and 6-month spending trends.
 3. Toggle the 🌙 Dark / ☀️ Light mode button in the navbar to demonstrate CSS variable transitions.
 
-[0:45 - 1:45] Minute 2: Splitwise Groups & Live Split Preview
-4. Navigate to "Splitwise Groups" -> click into "Goa Trip 2026".
-5. Highlight the "Greedy Min-Cash-Flow Simplification Active" banner:
-   - Explain how 4 cross-debts were simplified down to 2 direct settlements:
-     • Rahul owes Priya ₹1,250.00
-     • Amit owes Priya ₹2,150.00
-6. Click "➕ Add Expense" -> enter "Goa Beach Shack Dinner", Amount "₹2,400":
-   - Show the Live Split Preview box dynamically dividing ₹600.00 to each member as you type.
+[0:45 - 1:45] Minute 2: Splitwise Groups & 4 Split Types
+4. Navigate to "Splitwise Groups" -> click into "Goa Trip 2026":
+   - Highlight the "Greedy Min-Cash-Flow Simplification Active" banner.
+   - Show how the seeded group expenses (Swiggy ₹1,450, Uber ₹850, Villa ₹16,000) are resolved into direct simplified debts:
+     • Rahul owes Priya ₹2,275.00
+     • Amit owes Priya ₹4,575.00
+     • Sneha owes Priya ₹4,575.00
+     (Net group balances sum to exactly ₹0.00).
+5. Click "➕ Add Expense" -> enter "Highway Dhaba Dinner", Amount "₹2,400":
+   - Select Split Type: EQUAL, EXACT, PERCENTAGE, or SHARES (e.g. 2:2:1:1).
+   - Show the Live Split Preview box dynamically updating each participant's share as you type.
    - Demonstrate the rounding absorption feature (e.g. ₹100 split 3 ways yields ₹33.33, ₹33.33, and ₹33.34 to guarantee exact conservation of currency).
 
 [1:45 - 2:30] Minute 3: Settle-Up & Microservices Architecture
-7. Click "🤝 Settle Up" -> select "Rahul pays Priya ₹1,250 via UPI" -> click Save.
-   - Show how Rahul's debt in the group clears to ₹0.00 and generates a settlement receipt.
-8. Switch to the terminal or browser tab for Port 8082:
-   - Call http://localhost:8080/api/reports/analytics?userId=1
-   - Explain that Core Service (8080) made a synchronous REST call via RestTemplate to the separate Analytics Microservice (8082).
-9. Click "📥 Export CSV" to download the finalized personal expense report.
+6. Click "🤝 Settle Up" -> select "Rahul pays Priya ₹1,000 via UPI" -> click Save:
+   - Show Rahul's debt dynamically decrease from ₹2,275.00 down to ₹1,275.00, updating the simplified settlement chain in real time.
+7. Demonstrate Microservices Architecture in terminal or browser:
+   - Call http://localhost:8080/api/reports/analytics?userId=1 with JWT Bearer token.
+   - Point out in console logs that Core Service (8080) made a synchronous REST call via RestTemplate to the separate Analytics Microservice (8082).
+8. Click "📥 Export CSV" (or fetch GET http://localhost:8080/api/reports/export-csv) to stream the finalized expense ledger.
 
 [2:30 - 3:00] Wrap-up & Viva Q&A
-- Show the passing JUnit 5 tests (`mvn test` in unit-4) verifying greedy simplification edge cases.
+- Show the passing JUnit 5 tests (mvn test in unit-4) verifying greedy simplification edge cases (circular debts, uneven splits, rounding absorption).
 - Answer examiner questions from the Viva Q&A sections in the unit READMEs.
 ```
 

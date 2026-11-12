@@ -39,3 +39,4 @@ public class Category {
     public Boolean getIsDefault() { return isDefault; }
     public void setIsDefault(Boolean isDefault) { this.isDefault = isDefault; }
 }
+

@@ -1,13 +1,7 @@
 package com.expensesync.core.config;
 
-import com.expensesync.core.entity.Category;
-import com.expensesync.core.entity.Expense;
-import com.expensesync.core.entity.Group;
-import com.expensesync.core.entity.User;
-import com.expensesync.core.repository.CategoryRepository;
-import com.expensesync.core.repository.ExpenseRepository;
-import com.expensesync.core.repository.GroupRepository;
-import com.expensesync.core.repository.UserRepository;
+import com.expensesync.core.entity.*;
+import com.expensesync.core.repository.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -25,17 +19,20 @@ public class DataInitializer implements CommandLineRunner {
     private final CategoryRepository categoryRepository;
     private final GroupRepository groupRepository;
     private final ExpenseRepository expenseRepository;
+    private final ExpenseSplitRepository expenseSplitRepository;
     private final PasswordEncoder passwordEncoder;
 
     public DataInitializer(UserRepository userRepository,
                            CategoryRepository categoryRepository,
                            GroupRepository groupRepository,
                            ExpenseRepository expenseRepository,
+                           ExpenseSplitRepository expenseSplitRepository,
                            PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.categoryRepository = categoryRepository;
         this.groupRepository = groupRepository;
         this.expenseRepository = expenseRepository;
+        this.expenseSplitRepository = expenseSplitRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -86,15 +83,22 @@ public class DataInitializer implements CommandLineRunner {
 
         // 4. Seed Expenses
         createExpense("Monthly Flat Rent", new BigDecimal("9500.00"), rent, rahul, null, LocalDate.now().minusDays(10), "BANK", true);
-        createExpense("Swiggy Team Lunch", new BigDecimal("1450.00"), food, rahul, goaTrip, LocalDate.now().minusDays(8), "UPI", false);
-        createExpense("Uber Airport Drop", new BigDecimal("850.00"), travel, rahul, goaTrip, LocalDate.now().minusDays(6), "CARD", false);
-        createExpense("Goa Beach Villa (2 Nights)", new BigDecimal("16000.00"), rent, priya, goaTrip, LocalDate.now().minusDays(5), "CARD", false);
+        
+        Expense e1 = createExpense("Swiggy Team Lunch", new BigDecimal("1450.00"), food, rahul, goaTrip, LocalDate.now().minusDays(8), "UPI", false);
+        createEqualSplits(e1, Arrays.asList(rahul, priya, amit, sneha), new BigDecimal("1450.00"));
+
+        Expense e2 = createExpense("Uber Airport Drop", new BigDecimal("850.00"), travel, rahul, goaTrip, LocalDate.now().minusDays(6), "CARD", false);
+        createEqualSplits(e2, Arrays.asList(rahul, priya, amit, sneha), new BigDecimal("850.00"));
+
+        Expense e3 = createExpense("Goa Beach Villa (2 Nights)", new BigDecimal("16000.00"), rent, priya, goaTrip, LocalDate.now().minusDays(5), "CARD", false);
+        createEqualSplits(e3, Arrays.asList(rahul, priya, amit, sneha), new BigDecimal("16000.00"));
+
         createExpense("Airtel Fiber Broadband", new BigDecimal("999.00"), bills, rahul, null, LocalDate.now().minusDays(2), "UPI", true);
 
         System.out.println("✓ ExpenseSync Core Database seeded successfully!");
     }
 
-    private void createExpense(String title, BigDecimal amount, Category cat, User payer, Group group, LocalDate date, String mode, boolean recurring) {
+    private Expense createExpense(String title, BigDecimal amount, Category cat, User payer, Group group, LocalDate date, String mode, boolean recurring) {
         Expense exp = new Expense();
         exp.setTitle(title);
         exp.setAmount(amount);
@@ -104,6 +108,27 @@ public class DataInitializer implements CommandLineRunner {
         exp.setExpenseDate(date);
         exp.setPaymentMethod(mode);
         exp.setIsRecurring(recurring);
-        expenseRepository.save(exp);
+        return expenseRepository.save(exp);
+    }
+
+    private void createEqualSplits(Expense expense, List<User> members, BigDecimal total) {
+        BigDecimal base = total.divide(BigDecimal.valueOf(members.size()), 2, java.math.RoundingMode.FLOOR);
+        BigDecimal sum = BigDecimal.ZERO;
+
+        for (int i = 0; i < members.size(); i++) {
+            User m = members.get(i);
+            ExpenseSplit split = new ExpenseSplit();
+            split.setExpense(expense);
+            split.setUser(m);
+            split.setSplitType("EQUAL");
+
+            if (i == members.size() - 1) {
+                split.setShareAmount(total.subtract(sum));
+            } else {
+                split.setShareAmount(base);
+                sum = sum.add(base);
+            }
+            expenseSplitRepository.save(split);
+        }
     }
 }

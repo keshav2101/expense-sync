@@ -90,3 +90,4 @@ public class Expense {
     public List<ExpenseSplit> getSplits() { return splits; }
     public void setSplits(List<ExpenseSplit> splits) { this.splits = splits; }
 }
+

@@ -104,6 +104,25 @@ npm run dev
 ```
 Open `http://localhost:5173` to experience the full stack application with live JWT authentication and analytics integration.
 
+### Step 4: Run Automated End-to-End Integration Verification
+To verify all services running simultaneously:
+```bash
+./e2e_test.sh
+```
+This automated test suite executes and validates:
+1. User registration (`POST /api/auth/register`)
+2. User login and JWT extraction (`POST /api/auth/login`)
+3. Splitwise group creation (`POST /api/groups`)
+4. Group expenses across all 4 split algorithms:
+   - **EQUAL** (fraction remainder absorbed by last participant)
+   - **EXACT** (exact currency amounts summing to total)
+   - **PERCENTAGE** (percentages summing to 100%)
+   - **SHARES** (integer ratio shares e.g. 2:2:1:1)
+5. Group net balance calculation & greedy debt simplification (`GET /api/groups/{id}/simplified-debts`)
+6. Peer-to-peer settlement recording (`POST /api/settlements`)
+7. Authenticated inter-service REST call: Core Service (8080) -> Analytics Microservice (8082) with JWT (`GET /api/reports/analytics`)
+8. CSV report generation and stream export (`GET /api/reports/export-csv` and direct from port 8082)
+
 ---
 
 ## 6. Sample API Walkthrough

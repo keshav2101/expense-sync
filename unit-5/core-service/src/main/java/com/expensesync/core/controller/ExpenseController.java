@@ -1,6 +1,8 @@
 package com.expensesync.core.controller;
 
+import com.expensesync.core.dto.SplitDetailDTO;
 import com.expensesync.core.entity.Expense;
+import com.expensesync.core.entity.ExpenseSplit;
 import com.expensesync.core.entity.User;
 import com.expensesync.core.service.CoreExpenseService;
 import org.springframework.http.HttpStatus;
@@ -44,6 +46,22 @@ public class ExpenseController {
             map.put("paymentMethod", exp.getPaymentMethod());
             map.put("notes", exp.getNotes());
             map.put("isRecurring", exp.getIsRecurring());
+
+            List<Map<String, Object>> splitsList = new ArrayList<>();
+            if (exp.getSplits() != null) {
+                for (ExpenseSplit sp : exp.getSplits()) {
+                    Map<String, Object> spMap = new HashMap<>();
+                    spMap.put("userId", sp.getUser().getId());
+                    spMap.put("userName", sp.getUser().getName());
+                    spMap.put("shareAmount", sp.getShareAmount());
+                    spMap.put("splitType", sp.getSplitType());
+                    spMap.put("percentage", sp.getPercentage());
+                    spMap.put("shares", sp.getShares());
+                    splitsList.add(spMap);
+                }
+            }
+            map.put("splits", splitsList);
+
             response.add(map);
         }
 
@@ -64,14 +82,34 @@ public class ExpenseController {
         String method = (String) payload.getOrDefault("paymentMethod", "UPI");
         String notes = (String) payload.get("notes");
         boolean recurring = payload.get("isRecurring") != null && Boolean.parseBoolean(payload.get("isRecurring").toString());
+        String splitType = (String) payload.get("splitType");
 
-        Expense saved = expenseService.createExpense(title, amount, category, user, groupId, date, method, notes, recurring);
+        List<SplitDetailDTO> splitDTOs = new ArrayList<>();
+        if (payload.get("splits") instanceof List<?> list) {
+            for (Object obj : list) {
+                if (obj instanceof Map<?, ?> sm) {
+                    SplitDetailDTO s = new SplitDetailDTO();
+                    if (sm.get("userId") != null) s.setUserId(Long.parseLong(sm.get("userId").toString()));
+                    if (sm.get("userName") != null) s.setUserName(sm.get("userName").toString());
+                    if (sm.get("shareAmount") != null) s.setShareAmount(new BigDecimal(sm.get("shareAmount").toString()));
+                    if (sm.get("percentage") != null) s.setPercentage(new BigDecimal(sm.get("percentage").toString()));
+                    if (sm.get("shares") != null) s.setShares(Integer.parseInt(sm.get("shares").toString()));
+                    splitDTOs.add(s);
+                }
+            }
+        }
+
+        Expense saved = expenseService.createExpenseWithSplits(
+                title, amount, category, user, groupId, date, method, notes, recurring, splitType, splitDTOs
+        );
 
         Map<String, Object> map = new HashMap<>();
         map.put("id", saved.getId());
         map.put("title", saved.getTitle());
         map.put("amount", saved.getAmount());
         map.put("category", saved.getCategory().getName());
+        map.put("groupId", saved.getGroup() != null ? saved.getGroup().getId() : null);
+        map.put("splitCount", saved.getSplits() != null ? saved.getSplits().size() : 0);
         return new ResponseEntity<>(map, HttpStatus.CREATED);
     }
 
@@ -81,4 +119,3 @@ public class ExpenseController {
         return ResponseEntity.noContent().build();
     }
 }
-

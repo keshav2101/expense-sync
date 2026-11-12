@@ -61,3 +61,4 @@ public class Settlement {
     public LocalDateTime getSettledAt() { return settledAt; }
     public void setSettledAt(LocalDateTime settledAt) { this.settledAt = settledAt; }
 }
+

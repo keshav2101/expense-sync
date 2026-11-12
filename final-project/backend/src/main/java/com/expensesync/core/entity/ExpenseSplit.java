@@ -53,3 +53,4 @@ public class ExpenseSplit {
     public Integer getShares() { return shares; }
     public void setShares(Integer shares) { this.shares = shares; }
 }
+
