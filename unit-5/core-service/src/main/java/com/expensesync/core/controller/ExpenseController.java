@@ -113,6 +113,33 @@ public class ExpenseController {
         return new ResponseEntity<>(map, HttpStatus.CREATED);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<Map<String, Object>> updateExpense(
+            @PathVariable Long id,
+            @AuthenticationPrincipal User user,
+            @RequestBody Map<String, Object> payload) {
+        String title = (String) payload.get("title");
+        BigDecimal amount = payload.get("amount") != null ? new BigDecimal(payload.get("amount").toString()) : null;
+        String category = (String) payload.get("category");
+        LocalDate date = payload.get("date") != null ? LocalDate.parse(payload.get("date").toString()) : null;
+        String method = (String) payload.get("paymentMethod");
+        String notes = (String) payload.get("notes");
+        boolean recurring = payload.get("isRecurring") != null && Boolean.parseBoolean(payload.get("isRecurring").toString());
+
+        Expense updated = expenseService.updateExpense(id, title, amount, category, date, method, notes, recurring, user);
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("id", updated.getId());
+        map.put("title", updated.getTitle());
+        map.put("amount", updated.getAmount());
+        map.put("category", updated.getCategory().getName());
+        map.put("date", updated.getExpenseDate());
+        map.put("paymentMethod", updated.getPaymentMethod());
+        map.put("notes", updated.getNotes());
+        map.put("isRecurring", updated.getIsRecurring());
+        return ResponseEntity.ok(map);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteExpense(@PathVariable Long id, @AuthenticationPrincipal User user) {
         expenseService.deleteExpense(id, user);

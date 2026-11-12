@@ -1,6 +1,7 @@
-import { useState, useEffect, useMemo, useDebugValue } from 'react';
+import { useState, useEffect, useMemo, useDebugValue, useCallback } from 'react';
 import initialExpenses from '../data/mockExpenses.json';
 import { useAuth } from '../context/AuthContext';
+import api from '../api/axiosConfig';
 
 const DEFAULT_BUDGETS = {
   OVERALL: 30000,
@@ -15,7 +16,7 @@ const DEFAULT_BUDGETS = {
 };
 
 export function useExpenses() {
-  const { user } = useAuth();
+  const { user, token } = useAuth();
   const userId = user?.id || 1;
   const storageKey = `expensesync-expenses-u${userId}`;
   const budgetKey = `expensesync-budgets-u${userId}`;
@@ -24,7 +25,6 @@ export function useExpenses() {
     try {
       const saved = localStorage.getItem(storageKey);
       if (saved) return JSON.parse(saved);
-      // User 1 (Rahul) gets seeded expenses; new users get empty list
       return userId === 1 ? initialExpenses : [];
     } catch {
       return userId === 1 ? initialExpenses : [];
@@ -40,19 +40,36 @@ export function useExpenses() {
     }
   });
 
-  // Re-sync if user switches
-  useEffect(() => {
+  // Fetch real expenses from Spring Boot backend API
+  const refreshExpensesFromApi = useCallback(async () => {
+    const activeToken = token || localStorage.getItem('expensesync-jwt');
+    if (!activeToken) return;
+
     try {
-      const saved = localStorage.getItem(storageKey);
-      if (saved) {
-        setExpenses(JSON.parse(saved));
-      } else {
-        setExpenses(userId === 1 ? initialExpenses : []);
+      const res = await api.get('/expenses');
+      if (Array.isArray(res.data) && res.data.length > 0) {
+        const mapped = res.data.map((exp) => ({
+          id: exp.id,
+          title: exp.title,
+          amount: parseFloat(exp.amount) || 0,
+          category: exp.category || 'OTHER',
+          date: exp.date ? exp.date.toString() : new Date().toISOString().slice(0, 10),
+          paymentMethod: exp.paymentMethod || 'UPI',
+          notes: exp.notes || '',
+          isRecurring: Boolean(exp.isRecurring),
+          groupId: exp.groupId || null
+        }));
+        setExpenses(mapped);
+        localStorage.setItem(storageKey, JSON.stringify(mapped));
       }
-    } catch {
-      setExpenses(userId === 1 ? initialExpenses : []);
+    } catch (err) {
+      console.warn('Backend /api/expenses fetch failed or offline; using local cached state:', err.message);
     }
-  }, [userId]);
+  }, [storageKey, token]);
+
+  useEffect(() => {
+    refreshExpensesFromApi();
+  }, [refreshExpensesFromApi, userId]);
 
   // Filter & Search states
   const [searchTerm, setSearchTerm] = useState('');
@@ -71,20 +88,44 @@ export function useExpenses() {
     localStorage.setItem(budgetKey, JSON.stringify(budgets));
   }, [budgets, budgetKey]);
 
-  // CRUD Operations
-  const addExpense = (newExp) => {
-    const expenseWithId = {
-      ...newExp,
-      id: Date.now(),
+  // CRUD Operations with Spring Boot REST API calls
+  const addExpense = async (newExp) => {
+    const payload = {
+      title: newExp.title,
       amount: parseFloat(newExp.amount) || 0,
+      category: newExp.category || 'OTHER',
       date: newExp.date || new Date().toISOString().slice(0, 10),
-      paymentMethod: newExp.paymentMethod || 'UPI'
+      paymentMethod: newExp.paymentMethod || 'UPI',
+      notes: newExp.notes || '',
+      isRecurring: Boolean(newExp.isRecurring),
+      groupId: newExp.groupId || null
     };
-    setExpenses((prev) => [expenseWithId, ...prev]);
-    return expenseWithId;
+
+    let created = {
+      ...payload,
+      id: Date.now()
+    };
+
+    try {
+      const res = await api.post('/expenses', payload);
+      if (res.data && res.data.id) {
+        created = {
+          ...payload,
+          id: res.data.id,
+          title: res.data.title || payload.title,
+          amount: parseFloat(res.data.amount) || payload.amount,
+          category: res.data.category || payload.category
+        };
+      }
+    } catch (err) {
+      console.warn('POST /api/expenses call failed; fallback to local state:', err.message);
+    }
+
+    setExpenses((prev) => [created, ...prev]);
+    return created;
   };
 
-  const editExpense = (id, updatedFields) => {
+  const editExpense = async (id, updatedFields) => {
     setExpenses((prev) =>
       prev.map((exp) =>
         exp.id === id
@@ -92,10 +133,22 @@ export function useExpenses() {
           : exp
       )
     );
+
+    try {
+      await api.put(`/expenses/${id}`, updatedFields);
+    } catch (err) {
+      console.warn(`PUT /api/expenses/${id} call failed; updated locally:`, err.message);
+    }
   };
 
-  const deleteExpense = (id) => {
+  const deleteExpense = async (id) => {
     setExpenses((prev) => prev.filter((exp) => exp.id !== id));
+
+    try {
+      await api.delete(`/expenses/${id}`);
+    } catch (err) {
+      console.warn(`DELETE /api/expenses/${id} call failed; deleted locally:`, err.message);
+    }
   };
 
   // Filtered & Sorted Expenses

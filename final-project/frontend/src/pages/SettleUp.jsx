@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import initialGroups from '../data/mockGroups.json';
 import { useAuth } from '../context/AuthContext';
 import Toast from '../components/Toast';
+import api from '../api/axiosConfig';
 
 export default function SettleUp() {
   const { formatCurrency } = useAuth();
@@ -41,11 +42,25 @@ export default function SettleUp() {
 
   const activeGroup = groups.find((g) => g.id === Number(selectedGroup)) || groups[0];
 
-  const handleSettle = (e) => {
+  const handleSettle = async (e) => {
     e.preventDefault();
     if (!amount || Number(amount) <= 0) return;
 
     const amt = parseFloat(amount);
+
+    try {
+      await api.post('/settlements', {
+        groupId: activeGroup?.id || 1,
+        payerId: 1,
+        payeeId: 2,
+        amount: amt,
+        paymentMethod: method,
+        notes: `Settled from ${payer} to ${payee}`
+      });
+    } catch (err) {
+      console.warn('Backend /api/settlements call fallback:', err.message);
+    }
+
     const newEntry = {
       id: Date.now(),
       payer,

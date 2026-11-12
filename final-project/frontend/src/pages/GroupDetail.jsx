@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import initialGroups from '../data/mockGroups.json';
 import { useAuth } from '../context/AuthContext';
 import Toast from '../components/Toast';
+import api from '../api/axiosConfig';
 
 export default function GroupDetail() {
   const { id } = useParams();
@@ -23,11 +24,25 @@ export default function GroupDetail() {
   const [paidBy, setPaidBy] = useState('Rahul Sharma (You)');
   const [splitType, setSplitType] = useState('EQUAL');
 
-  const handleAddGroupExpense = (e) => {
+  const handleAddGroupExpense = async (e) => {
     e.preventDefault();
     if (!expTitle || !expAmount || Number(expAmount) <= 0) return;
 
     const amt = parseFloat(expAmount);
+
+    // Call backend API if connected
+    try {
+      await api.post('/expenses', {
+        title: expTitle,
+        amount: amt,
+        category: 'FOOD',
+        groupId: group.id || 1,
+        splitType: splitType
+      });
+    } catch (err) {
+      console.warn('Backend /api/expenses group split call fallback:', err.message);
+    }
+
     const newActivity = {
       id: Date.now(),
       text: `${paidBy} added '${expTitle}' (${formatCurrency(amt)}) via ${splitType} split`,

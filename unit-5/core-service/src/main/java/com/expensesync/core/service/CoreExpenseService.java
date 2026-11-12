@@ -109,6 +109,24 @@ public class CoreExpenseService {
         return saved;
     }
 
+    public Expense updateExpense(Long id, String title, BigDecimal amount, String categoryName,
+                                 LocalDate date, String paymentMethod, String notes, boolean isRecurring, User currentUser) {
+        Expense exp = expenseRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Expense not found with ID: " + id));
+        if (title != null) exp.setTitle(title);
+        if (amount != null) exp.setAmount(amount);
+        if (categoryName != null) {
+            Category category = categoryRepository.findByName(categoryName.toUpperCase())
+                    .orElseGet(() -> categoryRepository.save(new Category(categoryName.toUpperCase(), "📁", false)));
+            exp.setCategory(category);
+        }
+        if (date != null) exp.setExpenseDate(date);
+        if (paymentMethod != null) exp.setPaymentMethod(paymentMethod);
+        if (notes != null) exp.setNotes(notes);
+        exp.setIsRecurring(isRecurring);
+        return expenseRepository.save(exp);
+    }
+
     public void deleteExpense(Long id, User currentUser) {
         Expense exp = expenseRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Expense not found"));

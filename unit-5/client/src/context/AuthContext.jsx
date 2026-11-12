@@ -58,6 +58,8 @@ export function AuthProvider({ children }) {
         currency: data.currency || 'INR'
       };
 
+      localStorage.setItem('expensesync-jwt', data.token);
+      localStorage.setItem('expensesync-user', JSON.stringify(authenticatedUser));
       setToken(data.token);
       setUser(authenticatedUser);
       return { success: true };
