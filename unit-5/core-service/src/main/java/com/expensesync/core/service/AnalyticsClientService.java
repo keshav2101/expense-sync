@@ -27,6 +27,7 @@ public class AnalyticsClientService {
     /**
      * Inter-service REST call: Core Service -> Analytics Microservice (Port 8082)
      */
+    @SuppressWarnings("unchecked")
     public Map<String, Object> fetchMonthlyAnalytics(Long userId, String monthYear) {
         try {
             String url = String.format("%s/summary?userId=%d&monthYear=%s", analyticsServiceUrl, userId, monthYear);

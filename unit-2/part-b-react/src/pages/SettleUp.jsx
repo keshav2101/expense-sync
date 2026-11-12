@@ -53,7 +53,7 @@ export default function SettleUp() {
       amount: amt,
       method,
       date,
-      group: activeGroup.name
+      group: activeGroup ? activeGroup.name : 'Group'
     };
 
     setSettlementLog([newEntry, ...settlementLog]);
@@ -98,7 +98,7 @@ export default function SettleUp() {
                   onChange={(e) => setPayer(e.target.value)}
                   className="form-select"
                 >
-                  {activeGroup.members.map((m) => (
+                  {activeGroup?.members && activeGroup.members.map((m) => (
                     <option key={m.id} value={m.name}>{m.name}</option>
                   ))}
                 </select>
@@ -111,7 +111,7 @@ export default function SettleUp() {
                   onChange={(e) => setPayee(e.target.value)}
                   className="form-select"
                 >
-                  {activeGroup.members.map((m) => (
+                  {activeGroup?.members && activeGroup.members.map((m) => (
                     <option key={m.id} value={m.name}>{m.name}</option>
                   ))}
                 </select>

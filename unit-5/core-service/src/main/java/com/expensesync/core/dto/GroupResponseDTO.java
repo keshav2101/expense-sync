@@ -59,3 +59,4 @@ public class GroupResponseDTO {
     public List<DebtSimplificationDTO> getSimplifiedDebts() { return simplifiedDebts; }
     public void setSimplifiedDebts(List<DebtSimplificationDTO> simplifiedDebts) { this.simplifiedDebts = simplifiedDebts; }
 }
+

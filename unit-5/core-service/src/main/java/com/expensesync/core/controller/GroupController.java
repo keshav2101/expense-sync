@@ -54,3 +54,4 @@ public class GroupController {
         return ResponseEntity.ok(group.getNetBalances());
     }
 }
+

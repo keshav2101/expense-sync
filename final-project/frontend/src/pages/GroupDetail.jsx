@@ -80,7 +80,7 @@ export default function GroupDetail() {
             <ul style={{ margin: '0.4rem 0 0 1.25rem', fontSize: '0.9rem' }}>
               {group.simplifiedDebts.map((debt, idx) => (
                 <li key={idx}>
-                  {debt.from} pays <strong>{debt.to}</strong> {formatCurrency(debt.amount)}
+                  {debt.from || debt.fromUserName} pays <strong>{debt.to || debt.toUserName}</strong> {formatCurrency(debt.amount)}
                 </li>
               ))}
             </ul>
@@ -93,8 +93,8 @@ export default function GroupDetail() {
       {/* Member Net Balances Grid */}
       <h3 style={{ marginBottom: '1rem' }}>Group Member Balances</h3>
       <div className="stat-grid">
-        {group.members.map((member) => {
-          const bal = group.balances[member.id] || 0;
+        {group.members && group.members.map((member) => {
+          const bal = (group.balances && group.balances[member.id]) ?? (group.netBalances && group.netBalances[member.id]) ?? 0;
           return (
             <div key={member.id} className="stat-card">
               <div className="stat-label">{member.name}</div>
@@ -118,15 +118,21 @@ export default function GroupDetail() {
       <div className="card" style={{ marginTop: '1.5rem' }}>
         <h3 style={{ marginBottom: '1rem' }}>Group Activity Feed</h3>
         <ul className="activity-list">
-          {group.activity.map((act) => (
-            <li key={act.id} className="activity-item">
-              <span className="activity-icon">📌</span>
-              <div style={{ flex: 1 }}>
-                <p style={{ margin: 0, fontWeight: 500 }}>{act.text}</p>
-                <small style={{ color: 'var(--text-muted)' }}>{act.timestamp}</small>
-              </div>
+          {group.activity && group.activity.length > 0 ? (
+            group.activity.map((act) => (
+              <li key={act.id} className="activity-item">
+                <span className="activity-icon">📌</span>
+                <div style={{ flex: 1 }}>
+                  <p style={{ margin: 0, fontWeight: 500 }}>{act.text}</p>
+                  <small style={{ color: 'var(--text-muted)' }}>{act.timestamp}</small>
+                </div>
+              </li>
+            ))
+          ) : (
+            <li style={{ padding: '0.5rem 0', color: 'var(--text-muted)', fontSize: '0.9rem' }}>
+              No recent group activity recorded.
             </li>
-          ))}
+          )}
         </ul>
       </div>
 

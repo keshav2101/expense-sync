@@ -22,3 +22,4 @@ public class GroupRequestDTO {
     public List<String> getMemberEmails() { return memberEmails; }
     public void setMemberEmails(List<String> memberEmails) { this.memberEmails = memberEmails; }
 }
+

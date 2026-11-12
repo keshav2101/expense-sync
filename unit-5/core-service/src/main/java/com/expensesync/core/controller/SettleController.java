@@ -26,3 +26,4 @@ public class SettleController {
         return ResponseEntity.ok(updatedGroup);
     }
 }
+
