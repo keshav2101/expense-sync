@@ -1,0 +1,9 @@
+# Example configuration for core-service
+server.port=8080
+spring.application.name=core-service
+spring.profiles.active=h2
+
+# Replace with your MySQL credentials when running against MySQL:
+# spring.datasource.url=jdbc:mysql://localhost:3306/expensesync_db
+# spring.datasource.username=root
+# spring.datasource.password=your_password

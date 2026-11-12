@@ -1,0 +1,134 @@
+[
+  {
+    "id": 1,
+    "title": "Monthly Apartment Rent",
+    "amount": 9500.00,
+    "category": "RENT",
+    "date": "2026-11-01",
+    "paymentMethod": "BANK",
+    "notes": "November rent transfer to owner",
+    "isRecurring": true,
+    "groupId": null
+  },
+  {
+    "id": 2,
+    "title": "Swiggy Team Lunch",
+    "amount": 1450.00,
+    "category": "FOOD",
+    "date": "2026-11-03",
+    "paymentMethod": "UPI",
+    "notes": "Biryani & starters",
+    "isRecurring": false,
+    "groupId": 1
+  },
+  {
+    "id": 3,
+    "title": "Uber Airport Cab",
+    "amount": 850.00,
+    "category": "TRAVEL",
+    "date": "2026-11-04",
+    "paymentMethod": "CARD",
+    "notes": "Airport drop for Goa flight",
+    "isRecurring": false,
+    "groupId": 1
+  },
+  {
+    "id": 4,
+    "title": "Airtel Fiber Broadband",
+    "amount": 999.00,
+    "category": "BILLS",
+    "date": "2026-11-05",
+    "paymentMethod": "UPI",
+    "notes": "Monthly 200Mbps plan",
+    "isRecurring": true,
+    "groupId": null
+  },
+  {
+    "id": 5,
+    "title": "Blinkit Grocery Restock",
+    "amount": 1280.00,
+    "category": "FOOD",
+    "date": "2026-11-06",
+    "paymentMethod": "UPI",
+    "notes": "Milk, eggs, oats, fruits",
+    "isRecurring": false,
+    "groupId": null
+  },
+  {
+    "id": 6,
+    "title": "Goa Beach Villa (2 Nights)",
+    "amount": 16000.00,
+    "category": "RENT",
+    "date": "2026-11-07",
+    "paymentMethod": "CARD",
+    "notes": "Booked via Airbnb by Priya",
+    "isRecurring": false,
+    "groupId": 1
+  },
+  {
+    "id": 7,
+    "title": "Beach Shack Seafood & Drinks",
+    "amount": 4500.00,
+    "category": "FOOD",
+    "date": "2026-11-08",
+    "paymentMethod": "UPI",
+    "notes": "Dinner at Calangute",
+    "isRecurring": false,
+    "groupId": 1
+  },
+  {
+    "id": 8,
+    "title": "Water Sports & Scuba",
+    "amount": 6000.00,
+    "category": "ENTERTAINMENT",
+    "date": "2026-11-09",
+    "paymentMethod": "CASH",
+    "notes": "Shared activity for 4",
+    "isRecurring": false,
+    "groupId": 1
+  },
+  {
+    "id": 9,
+    "title": "D-Mart Monthly Supplies",
+    "amount": 2650.00,
+    "category": "SHOPPING",
+    "date": "2026-11-10",
+    "paymentMethod": "CARD",
+    "notes": "Toiletries and cleaning supplies",
+    "isRecurring": false,
+    "groupId": 2
+  },
+  {
+    "id": 10,
+    "title": "Pharmacy & Multivitamins",
+    "amount": 680.00,
+    "category": "HEALTH",
+    "date": "2026-11-11",
+    "paymentMethod": "UPI",
+    "notes": "Apollo Pharmacy medicine bill",
+    "isRecurring": false,
+    "groupId": null
+  },
+  {
+    "id": 11,
+    "title": "Electricity Bill B-302",
+    "amount": 1450.00,
+    "category": "BILLS",
+    "date": "2026-11-11",
+    "paymentMethod": "UPI",
+    "notes": "TNEB electricity bill",
+    "isRecurring": true,
+    "groupId": 2
+  },
+  {
+    "id": 12,
+    "title": "Netflix Premium Plan",
+    "amount": 649.00,
+    "category": "ENTERTAINMENT",
+    "date": "2026-11-12",
+    "paymentMethod": "CARD",
+    "notes": "4K 4-screen subscription",
+    "isRecurring": true,
+    "groupId": null
+  }
+]
