@@ -129,3 +129,4 @@ public class DebtSimplificationServiceTest {
         assertEquals(new BigDecimal("500.00"), result.get(0).getAmount());
     }
 }
+

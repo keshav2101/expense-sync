@@ -350,3 +350,4 @@ function showAlert(msg, type) {
 function hideAlert() {
   statusAlert.style.display = 'none';
 }
+

@@ -52,3 +52,4 @@ public class AuthService {
         return new AuthResponse(token, user.getId(), user.getName(), user.getEmail(), user.getDefaultCurrency());
     }
 }
+

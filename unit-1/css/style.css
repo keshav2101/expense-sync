@@ -476,3 +476,4 @@ input:user-invalid + .form-error {
 .theme-btn:hover {
   background: var(--border-color);
 }
+

@@ -68,7 +68,15 @@ open index.html
 
 ---
 
-## 6. Viva Q&A (5 Key Questions)
+## 6. Assumptions
+* **Currency**: The primary default currency is Indian Rupee (INR - ₹).
+* **Scope**: Unit 1 focuses strictly on static HTML5 semantic layout and CSS styling; no client-side JavaScript calculation frameworks or backend servers are used.
+* **Canvas Charting**: HTML5 2D Canvas is used for zero-dependency charting instead of external SVG/Chart.js libraries.
+* **Storage**: Theme preferences (`light`/`dark`) are persisted client-side via `localStorage`.
+
+---
+
+## 7. Viva Q&A (5 Key Questions)
 
 ### Q1: What is the CSS Box Model, and why is `box-sizing: border-box;` considered a best practice?
 **Answer:** The CSS Box Model comprises four concentric rectangular layers around every element: **Content**, **Padding**, **Border**, and **Margin**. By default (`box-sizing: content-box`), padding and borders add to the specified width and height, causing unexpected layout overflows. Setting `box-sizing: border-box` includes padding and borders inside the declared width/height, making responsive layouts predictable and easier to calculate.
@@ -86,3 +94,4 @@ open index.html
 
 ### Q5: What HTML5 form validation attributes are utilized, and how does the browser enforce them?
 **Answer:** Attributes used include `required`, `type="email"`, `type="number"`, `minlength="8"`, `step="0.01"`, and `min="1"`. The browser enforces constraint validation natively before form dispatch, preventing submission if fields are invalid and exposing pseudo-classes such as `:invalid` and `:user-invalid` for visual feedback.
+

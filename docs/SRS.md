@@ -59,3 +59,4 @@ ExpenseSync is a dual-capability financial web platform designed for university 
 * **Security**: OWASP compliance, SQL injection protection via JPA/PreparedStatements, CSRF disabled for stateless JWT, CORS restricted to trusted origins.
 * **Maintainability**: Clean three-tier layered architecture (`Controller` $\rightarrow$ `Service` $\rightarrow$ `Repository`).
 * **Portability**: Packaged with Docker Compose and dual-profile database configurations (MySQL + In-Memory H2 fallback).
+

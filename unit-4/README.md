@@ -158,7 +158,14 @@ curl -X POST http://localhost:8080/api/expenses \
 
 ---
 
-## 6. Viva Q&A (5 Key Questions)
+## 6. Assumptions
+* **Open Endpoints**: REST endpoints in Unit 4 are intentionally unauthenticated (no JWT enforcement) to focus purely on three-tier architecture, Bean Validation, and service algorithms; JWT security is applied in Unit 5.
+* **Algorithm Heuristic**: The greedy minimum-cash-flow algorithm assumes that all participants in a group belong to a single connected balance graph and simplifies debts to at most $N-1$ settlement transfers.
+* **Precision**: Monetary figures use `java.math.BigDecimal` with 2 decimal places (`RoundingMode.HALF_UP` / `RoundingMode.FLOOR`) to eliminate IEEE-754 binary floating-point drift.
+
+---
+
+## 7. Viva Q&A (5 Key Questions)
 
 ### Q1: What is the Three-Tier Architecture in Spring Boot, and what does each layer do?
 **Answer:**
@@ -184,3 +191,4 @@ curl -X POST http://localhost:8080/api/expenses \
 
 ### Q5: What is Spring Boot Auto-Configuration?
 **Answer:** Spring Boot analyzes JAR dependencies present on the classpath (e.g. `spring-boot-starter-web`) and automatically configures essential beans (such as the DispatcherServlet, Jackson ObjectMapper, and an embedded Apache Tomcat server) with sensible defaults, removing hundreds of lines of legacy XML/Java boilerplate configuration.
+

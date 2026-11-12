@@ -37,3 +37,4 @@ public class AnalyticsController {
                 .body(csvContent);
     }
 }
+

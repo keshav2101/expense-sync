@@ -114,3 +114,4 @@ CREATE INDEX idx_expenses_date ON expenses(expense_date);
 CREATE INDEX idx_expenses_user ON expenses(paid_by);
 CREATE INDEX idx_expenses_group ON expenses(group_id);
 CREATE INDEX idx_splits_user ON expense_splits(user_id);
+

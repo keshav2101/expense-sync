@@ -10,3 +10,4 @@ public class ExpenseSyncApplication {
         SpringApplication.run(ExpenseSyncApplication.class, args);
     }
 }
+

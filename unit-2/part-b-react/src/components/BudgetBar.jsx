@@ -30,3 +30,4 @@ export default function BudgetBar({ category, statusInfo }) {
     </div>
   );
 }
+

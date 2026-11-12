@@ -66,3 +66,4 @@ public class ExpenseResponseDTO {
     public List<SplitDetailDTO> getSplits() { return splits; }
     public void setSplits(List<SplitDetailDTO> splits) { this.splits = splits; }
 }
+

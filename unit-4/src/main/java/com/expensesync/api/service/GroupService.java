@@ -97,3 +97,4 @@ public class GroupService {
         group.setSimplifiedDebts(simplified);
     }
 }
+

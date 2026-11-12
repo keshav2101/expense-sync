@@ -44,3 +44,4 @@ target/
 # Database / H2
 *.db
 *.h2.db
+

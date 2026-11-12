@@ -170,7 +170,15 @@ curl -X GET "http://localhost:8080/api/reports/analytics?userId=1&monthYear=2026
 
 ---
 
-## 7. Viva Q&A (5 Key Questions)
+## 7. Assumptions
+* **Port Allocation**: `core-service` runs on port 8080; `analytics-service` runs on port 8082; `client` runs on port 5173.
+* **Database Profile**: Active profile is `h2` by default for zero-setup execution with automated demo seeding (`DataInitializer.java`). It can be toggled to `mysql` via `-Dspring.profiles.active=mysql`.
+* **Inter-Service Resilience**: `core-service` includes a circuit-breaker fallback in `AnalyticsClientService` so that if `analytics-service` is temporarily offline, the core application continues functioning smoothly.
+* **Token Expiry**: JWT tokens are signed using HMAC-SHA256 with a 24-hour expiration window.
+
+---
+
+## 8. Viva Q&A (5 Key Questions)
 
 ### Q1: What are the benefits of migrating from a monolith to microservices?
 **Answer:**
@@ -191,3 +199,4 @@ curl -X GET "http://localhost:8080/api/reports/analytics?userId=1&monthYear=2026
 
 ### Q5: Why is BCrypt preferred over SHA-256 for password hashing?
 **Answer:** SHA-256 is an extremely fast cryptographic hash designed for high-throughput checksums, making it vulnerable to brute-force attacks via modern GPU clusters. **BCrypt** is an adaptive, slow hashing algorithm that incorporates a cryptographic salt (preventing Rainbow Table attacks) and a configurable work factor (iteration count), significantly increasing the computational cost of cracking passwords.
+

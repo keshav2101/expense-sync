@@ -127,3 +127,4 @@ SELECT user_id FROM group_members WHERE group_id = 2;
 SELECT user_id FROM group_members WHERE group_id = 1
 EXCEPT
 SELECT user_id FROM group_members WHERE group_id = 2;
+

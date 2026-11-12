@@ -111,7 +111,14 @@ Sneha Rao            | ₹0.00        | ₹5212.50     | - ₹5212.50 (Owes grou
 
 ---
 
-## 6. Viva Q&A (5 Key Questions)
+## 6. Assumptions
+* **Dual Database Mode**: Embedded H2 running in MySQL Compatibility Mode (`MODE=MySQL`) is the default fallback so evaluators can run the console app without installing or starting a local MySQL server.
+* **Personal vs. Group Association**: Personal transactions have `group_id = NULL`; group transactions link to an active group foreign key.
+* **Passwords**: Password hashes seeded in `seed.sql` are generated using BCrypt for the test password `Password@123`.
+
+---
+
+## 7. Viva Q&A (5 Key Questions)
 
 ### Q1: What is the difference between `Statement` and `PreparedStatement` in JDBC?
 **Answer:**
@@ -132,3 +139,4 @@ Sneha Rao            | ₹0.00        | ₹5212.50     | - ₹5212.50 (Owes grou
 
 ### Q5: Why is closing database connections (`connection.close()`) critical in enterprise Java?
 **Answer:** Database connections represent expensive operating system network sockets and database memory buffers. Leaving connections open causes **connection leaks**, eventually exhausting the database connection pool limit and crashing the application. In JDBC, connections and statements should be managed within Java `try-with-resources` blocks or explicitly closed in `finally` blocks.
+

@@ -39,3 +39,4 @@ public class BudgetController {
         return ResponseEntity.ok(categoryBudgets);
     }
 }
+

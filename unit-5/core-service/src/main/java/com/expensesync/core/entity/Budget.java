@@ -44,3 +44,4 @@ public class Budget {
     public String getMonthYear() { return monthYear; }
     public void setMonthYear(String monthYear) { this.monthYear = monthYear; }
 }
+

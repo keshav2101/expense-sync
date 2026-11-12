@@ -79,3 +79,4 @@ INSERT INTO budgets (user_id, category_id, monthly_limit, month_year) VALUES
 (1, 2, 4000.00, '2026-11'),
 (1, 3, 12000.00, '2026-11'),
 (1, 5, 3000.00, '2026-11');
+

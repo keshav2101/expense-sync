@@ -22,3 +22,4 @@ export default function ConfirmDialog({ isOpen, title, message, onConfirm, onCan
     </div>
   );
 }
+

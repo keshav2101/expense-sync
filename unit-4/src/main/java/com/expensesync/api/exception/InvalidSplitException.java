@@ -5,3 +5,4 @@ public class InvalidSplitException extends RuntimeException {
         super(message);
     }
 }
+

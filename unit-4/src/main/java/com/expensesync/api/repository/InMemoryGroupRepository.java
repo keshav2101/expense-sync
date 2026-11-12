@@ -76,3 +76,4 @@ public class InMemoryGroupRepository {
         return group;
     }
 }
+

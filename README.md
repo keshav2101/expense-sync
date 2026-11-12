@@ -139,17 +139,17 @@ erDiagram
 
 ---
 
-## 2. Unit-Wise Structure (Syllabus Mapping)
+## 2. Syllabus Mapping (21CSE354T Full Stack Web Development)
 
-| Unit | Focus Topic | Directory | Key Deliverables & Tech |
-| :--- | :--- | :--- | :--- |
-| **Unit 1** | **HTML5 & CSS3 Foundation** | [`unit-1/`](unit-1/README.md) | 7 semantic static pages, Flexbox/Grid, pure HTML5 Canvas donut chart, dark/light theme CSS variables. |
-| **Unit 2** | **JavaScript & React JS** | [`unit-2/`](unit-2/README.md) | **Part A**: Vanilla JS DOM split calculator with 4 split algorithms.<br>**Part B**: React 18 SPA (Vite), custom hooks (`useExpenses`, `useDebounce`) with `useDebugValue`, Context API. |
-| **Unit 3** | **SQL & JDBC Data Access** | [`unit-3/`](unit-3/README.md) | Normalized relational schema (8 tables), joins, subqueries, `UNION/INTERSECT/EXCEPT`, and Java 17 JDBC CLI application with PreparedStatement CRUD. |
-| **Unit 4** | **Spring Boot Part 1** | [`unit-4/`](unit-4/README.md) | Layered REST API (`Controller` $\rightarrow$ `Service` $\rightarrow$ `Repository`), DTOs, Bean Validation, Global Exception Handling, Greedy Min-Cash-Flow Debt Simplification, JUnit 5 tests. |
-| **Unit 5** | **Spring Boot Part 2 & Microservices** | [`unit-5/`](unit-5/README.md) | Spring Data JPA (MySQL/H2 dual profile), stateless JWT Auth, Analytics microservice (port 8082), inter-service `RestTemplate` calls, connected React client with Axios. |
-| **Final** | **Consolidated Production Build** | [`final-project/`](final-project/) | Unified Docker Compose stack (`mysql-db`, `core-service`, `analytics-service`, `frontend`). |
-| **Docs** | **Project Documentation** | [`docs/`](docs/) | SRS, Mermaid Architecture & ER diagrams, API Docs, Postman collection, College Project Report outline. |
+| Unit | Syllabus Module & Hours | Project Component | Path | Key Concepts Demonstrated |
+| :--- | :--- | :--- | :--- | :--- |
+| **Unit 1** | **HTML5 & CSS3** (9 Hours) | Static Multi-Page Site | [`unit-1/`](unit-1/README.md) | Semantic tags, validation, Flexbox, Grid, keyframe animations, Canvas 2D donut chart, dark/light CSS variables. |
+| **Unit 2** | **JavaScript & React JS** (9 Hours) | Dynamic Client Apps | [`unit-2/`](unit-2/README.md) | **Part A**: Vanilla JS DOM, ES6 array methods, 4 split algorithms with paise rounding, Canvas Confetti.<br>**Part B**: React 18 SPA (Vite), custom hooks (`useExpenses`, `useDebounce`) with `useDebugValue`, Context API (`ThemeContext`, `AuthContext`), budget progress meters. |
+| **Unit 3** | **SQL & JDBC** (9 Hours) | Relational DB & CLI | [`unit-3/`](unit-3/README.md) | 8-table relational schema (`schema.sql`), seed data (`seed.sql`), multi-table joins, subqueries ("Who Owes Whom"), `UNION/INTERSECT/EXCEPT`, and Java 17 JDBC CLI (`PreparedStatement`, `ResultSet`, connection pooling). |
+| **Unit 4** | **Spring Boot Part 1** (9 Hours) | Layered REST API | [`unit-4/`](unit-4/README.md) | Controller $\rightarrow$ Service $\rightarrow$ Repository architecture, DTOs, Jakarta Bean Validation, `@RestControllerAdvice`, Greedy Minimum-Cash-Flow Algorithm, JUnit 5 test suite (6 test cases), Postman collection. |
+| **Unit 5** | **Spring Boot Part 2 & Microservices** (9 Hours) | Full Stack & Microservices | [`unit-5/`](unit-5/README.md) | Spring Data JPA (MySQL & H2 profiles), stateless JWT authentication (HMAC-SHA256, BCrypt), dedicated Analytics microservice (port 8082), inter-service `RestTemplate` calls, connected React client with Axios. |
+| **Final** | **Consolidated Capstone** | Production Stack | [`final-project/`](final-project/) | Unified Docker Compose deployment (`mysql-db`, `core-service`, `analytics-service`, `frontend`). |
+| **Docs** | **Engineering Artifacts** | Formal Documentation | [`docs/`](docs/) | SRS, Mermaid Architecture & ER diagrams, API Docs, Postman collection, College Project Report outline. |
 
 ---
 
@@ -209,15 +209,58 @@ erDiagram
 
 ---
 
-## 5. Quick Start Guide
+## 5. Environment Setup & Prerequisites
 
-### Prerequisites
-* Java Development Kit (JDK 17+)
-* Apache Maven (3.8+)
-* Node.js (18+) & npm
-* Git
+### Required Tooling
+* **Java**: JDK 17 or higher
+* **Build Tool**: Apache Maven 3.8+
+* **Node.js**: Node 18+ and npm 9+
+* **Database**: MySQL 8.0+ (Optional; automated in-memory H2 profile included for zero-setup execution)
+* **Git**: Version 2.30+
+
+### Installation Commands by Operating System
+
+#### macOS (Homebrew)
+```bash
+# 1. Install Java 17+ and Maven
+brew install openjdk@17 maven
+sudo ln -sfn /opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk /Library/Java/JavaVirtualMachines/openjdk-17.jdk
+
+# 2. Install Node.js (LTS)
+brew install node
+
+# 3. (Optional) Install MySQL
+brew install mysql
+brew services start mysql
+```
+
+#### Ubuntu / Debian Linux
+```bash
+# 1. Install Java 17 and Maven
+sudo apt update
+sudo apt install -y openjdk-17-jdk maven
+
+# 2. Install Node.js 18+
+curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+sudo apt install -y nodejs
+
+# 3. (Optional) Install MySQL
+sudo apt install -y mysql-server
+sudo systemctl start mysql
+```
+
+#### Windows (PowerShell with Winget / Chocolatey)
+```powershell
+# Using Winget
+winget install EclipseAdoptium.Temurin.17.JDK
+winget install Apache.Maven
+winget install OpenJS.NodeJS.LTS
+winget install Oracle.MySQL
+```
 
 ---
+
+## 6. Quick Start Guide
 
 ### Running Unit by Unit
 
@@ -225,7 +268,7 @@ erDiagram
 ```bash
 cd unit-1
 open index.html
-# Or: npx serve .
+# Or: python3 -m http.server 3000
 ```
 
 #### Unit 2: JavaScript & React JS
@@ -271,7 +314,7 @@ npm run dev
 
 ---
 
-### Running via Docker Compose (Unified Stack)
+### Running via Docker Compose (Unified Production Stack)
 ```bash
 cd final-project
 docker-compose up --build
@@ -283,7 +326,46 @@ docker-compose up --build
 
 ---
 
-## 6. Seed Demo Credentials
+## 7. 3-Minute Examiner Demo Script
+
+Follow this sequential walkthrough during the laboratory viva or project evaluation:
+
+```text
+[0:00 - 0:45] Minute 1: Authentication & Personal Budgeting
+1. Open http://localhost:5173 and log in with demo credentials:
+   Email: rahul@example.com | Password: Password@123
+2. Point out the Financial Overview dashboard:
+   - 4 Metric cards (Total Spent: ₹19,000, You Owe: ₹1,250, You are Owed: ₹3,850).
+   - Dynamic 80% caution indicator and 100% overspend alerts on category meters.
+   - Live SVG Category Donut chart and 6-month spending trends.
+3. Toggle the 🌙 Dark / ☀️ Light mode button in the navbar to demonstrate CSS variable transitions.
+
+[0:45 - 1:45] Minute 2: Splitwise Groups & Live Split Preview
+4. Navigate to "Splitwise Groups" -> click into "Goa Trip 2026".
+5. Highlight the "Greedy Min-Cash-Flow Simplification Active" banner:
+   - Explain how 4 cross-debts were simplified down to 2 direct settlements:
+     • Rahul owes Priya ₹1,250.00
+     • Amit owes Priya ₹2,150.00
+6. Click "➕ Add Expense" -> enter "Goa Beach Shack Dinner", Amount "₹2,400":
+   - Show the Live Split Preview box dynamically dividing ₹600.00 to each member as you type.
+   - Demonstrate the rounding absorption feature (e.g. ₹100 split 3 ways yields ₹33.33, ₹33.33, and ₹33.34 to guarantee exact conservation of currency).
+
+[1:45 - 2:30] Minute 3: Settle-Up & Microservices Architecture
+7. Click "🤝 Settle Up" -> select "Rahul pays Priya ₹1,250 via UPI" -> click Save.
+   - Show how Rahul's debt in the group clears to ₹0.00 and generates a settlement receipt.
+8. Switch to the terminal or browser tab for Port 8082:
+   - Call http://localhost:8080/api/reports/analytics?userId=1
+   - Explain that Core Service (8080) made a synchronous REST call via RestTemplate to the separate Analytics Microservice (8082).
+9. Click "📥 Export CSV" to download the finalized personal expense report.
+
+[2:30 - 3:00] Wrap-up & Viva Q&A
+- Show the passing JUnit 5 tests (`mvn test` in unit-4) verifying greedy simplification edge cases.
+- Answer examiner questions from the Viva Q&A sections in the unit READMEs.
+```
+
+---
+
+## 8. Seed Demo Credentials
 
 | Role | Name | Email | Password |
 | :--- | :--- | :--- | :--- |
@@ -294,7 +376,16 @@ docker-compose up --build
 
 ---
 
-## 7. Future Scope
+## 9. Known Technical Limitations & Honest Disclosures
+
+In the spirit of rigorous academic engineering, the following limitations are noted:
+1. **Microservice Service Discovery**: Services currently communicate via configured host/port URIs (`http://localhost:8082`). An enterprise Netflix Eureka discovery server or Spring Cloud Consul was omitted to keep the college lab build lightweight and avoid excessive memory overhead.
+2. **Offline Payment Gateway**: Settle-up payments record ledger transactions (UPI, Cash, Bank Transfer) but do not execute live banking transactions via real payment gateways (such as Razorpay or Stripe) since this is an educational mock application.
+3. **Receipt Storage**: File attachments for receipts are stored in the database metadata; cloud bucket object storage (e.g. AWS S3 or Google Cloud Storage) is marked for future scope.
+
+---
+
+## 10. Future Scope
 * **OCR Receipt Scanner**: Automated expense digitization using Google Cloud Vision API.
 * **WebSocket Live Feed**: Real-time push updates for instant group settlement notifications.
 * **Native UPI Deep-Linking**: Integration with `upi://pay` URI schemes for immediate mobile banking app settlement.
@@ -303,3 +394,4 @@ docker-compose up --build
 
 ## 8. License & Academic Attribution
 Developed as an academic capstone submission for **21CSE354T Full Stack Web Development** at **SRM Institute of Science and Technology**. Released under the [MIT License](LICENSE).
+

@@ -107,3 +107,4 @@ public class DataInitializer implements CommandLineRunner {
         expenseRepository.save(exp);
     }
 }
+

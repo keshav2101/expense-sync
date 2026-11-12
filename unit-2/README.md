@@ -86,7 +86,14 @@ npm run build
 
 ---
 
-## 6. Viva Q&A (5 Key Questions)
+## 6. Assumptions
+* **Rounding Mechanics**: In financial splits with fractional divisions (e.g. ₹100 split 3 ways = ₹33.33 each), the remaining ₹0.01 is allocated to the last member so total shares equal the exact bill amount.
+* **State Persistence**: In Part B, expenses and groups hydrate from bundled mock JSON files and persist to browser `localStorage` to emulate stateful REST operations prior to database connection.
+* **Auth Emulation**: Authentication in Unit 2 is simulated using an `AuthContext` provider with a mock JWT string.
+
+---
+
+## 7. Viva Q&A (5 Key Questions)
 
 ### Q1: What are the Rules of Hooks in React, and why do they exist?
 **Answer:**
@@ -105,3 +112,4 @@ React relies on the order in which hooks are called across renders to preserve s
 
 ### Q5: How does React Context API differ from Redux or local state?
 **Answer:** Local state is scoped to a single component and requires "prop drilling" to pass down nested hierarchies. React Context (`createContext`, `useContext`) provides a native way to broadcast global values (like `ThemeContext` and `AuthContext`) across the entire component tree without third-party libraries like Redux.
+

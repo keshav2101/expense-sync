@@ -159,3 +159,4 @@ function initMonthlyTrendBarChart() {
     ctx.fillText(`${(values[idx] / 1000).toFixed(1)}k`, x + barWidth / 2, y - 6);
   });
 }
+
