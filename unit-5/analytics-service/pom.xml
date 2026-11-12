@@ -12,9 +12,9 @@
     </parent>
 
     <groupId>com.expensesync</groupId>
-    <artifactId>analytics-service</artifactId>
+    <artifactId>unit5-analytics-service</artifactId>
     <version>1.0.0</version>
-    <name>analytics-service</name>
+    <name>unit5-analytics-service</name>
     <description>ExpenseSync Unit 5: Analytics and Reporting Microservice</description>
 
     <properties>

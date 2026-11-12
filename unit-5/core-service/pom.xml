@@ -12,9 +12,9 @@
     </parent>
 
     <groupId>com.expensesync</groupId>
-    <artifactId>core-service</artifactId>
+    <artifactId>unit5-core-service</artifactId>
     <version>1.0.0</version>
-    <name>core-service</name>
+    <name>unit5-core-service</name>
     <description>ExpenseSync Unit 5: Core Service with JPA, MySQL/H2, Spring Security &amp; JWT</description>
 
     <properties>
