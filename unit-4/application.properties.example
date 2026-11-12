@@ -1,0 +1,7 @@
+# ExpenseSync Spring Boot Application Properties Example
+server.port=8080
+spring.application.name=expensesync-api
+
+# Logging configuration
+logging.level.com.expensesync=INFO
+logging.level.org.springframework.web=INFO
