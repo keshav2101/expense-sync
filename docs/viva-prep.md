@@ -248,3 +248,4 @@ Follow this exact sequence during the viva demonstration:
 9. **Show Passing Automated Tests**:
    - In terminal: `./e2e_test.sh` -> All 8 end-to-end assertions pass.
    - In terminal: `mvn -f unit-4/pom.xml test` -> 6/6 JUnit 5 tests pass.
+

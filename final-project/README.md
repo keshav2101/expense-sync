@@ -35,7 +35,7 @@ flowchart TD
 ## 3. How to Run
 
 > [!NOTE]
-> **Verification Status**: Docker setup provided but not executed in the verification environment (Docker CLI version 29.6.1 is installed on the evaluation machine, but the local Docker daemon service was not active). The application was verified via standalone process orchestration.
+> **Docker Verification Status**: Docker daemon was started via `colima start` and reached via `docker info` (Docker Engine v29.5.2 / Community v29.6.1). During `docker-compose up --build`, the Colima virtual disk `/dev/vdb1` mounted at `/mnt/lima-colima` was found to be 100% full (30G/30G allocated to existing images/containers), resulting in containerd layer extraction failure: `write ...: no space left on device`. To preserve existing system state and avoid accidental data loss, `docker system prune` was withheld. The complete application stack was independently verified via native multi-process orchestration.
 
 ### Option A: Running with Docker Compose (Recommended for Production)
 
@@ -107,3 +107,4 @@ npm run dev
 * **Microservices**: REST synchronous inter-service communication via `RestTemplate`, circuit-breaker fallback, dynamic CSV streaming.
 * **Persistence**: MySQL 8.0 relational schema (3NF) with H2 database zero-setup fallback.
 * **DevOps**: Docker, Docker Compose, multi-stage Dockerfiles.
+
