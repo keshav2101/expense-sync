@@ -52,6 +52,18 @@ public class GroupService {
         return list;
     }
 
+    public List<GroupResponseDTO> getGroupsForUser(User user) {
+        if (user == null) {
+            return Collections.emptyList();
+        }
+        List<Group> groups = groupRepository.findGroupsByUserId(user.getId());
+        List<GroupResponseDTO> list = new ArrayList<>();
+        for (Group g : groups) {
+            list.add(enrichGroupDTO(g));
+        }
+        return list;
+    }
+
     public GroupResponseDTO getGroupById(Long id) {
         Group g = groupRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Group with ID " + id + " not found"));

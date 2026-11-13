@@ -29,6 +29,9 @@ public class ExpenseController {
 
     @GetMapping
     public ResponseEntity<List<Map<String, Object>>> getExpenses(@AuthenticationPrincipal User user) {
+        if (user == null) {
+            return ResponseEntity.ok(new ArrayList<>());
+        }
         List<Expense> expenses = expenseService.getExpensesForUser(user);
         List<Map<String, Object>> response = new ArrayList<>();
 

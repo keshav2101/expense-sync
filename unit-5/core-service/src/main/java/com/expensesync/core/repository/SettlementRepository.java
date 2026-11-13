@@ -9,5 +9,6 @@ import java.util.List;
 @Repository
 public interface SettlementRepository extends JpaRepository<Settlement, Long> {
     List<Settlement> findByGroupIdOrderBySettledAtDesc(Long groupId);
+    List<Settlement> findByPayerIdOrPayeeIdOrderBySettledAtDesc(Long payerId, Long payeeId);
 }
 

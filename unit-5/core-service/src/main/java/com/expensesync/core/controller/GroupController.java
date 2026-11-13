@@ -25,7 +25,10 @@ public class GroupController {
     }
 
     @GetMapping
-    public ResponseEntity<List<GroupResponseDTO>> getAllGroups() {
+    public ResponseEntity<List<GroupResponseDTO>> getAllGroups(@AuthenticationPrincipal User user) {
+        if (user != null) {
+            return ResponseEntity.ok(groupService.getGroupsForUser(user));
+        }
         return ResponseEntity.ok(groupService.getAllGroups());
     }
 

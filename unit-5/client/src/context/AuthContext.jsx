@@ -1,32 +1,20 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import api from '../api/axiosConfig';
 
 const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(() => {
-    try {
-      const saved = localStorage.getItem('expensesync-user');
-      return saved ? JSON.parse(saved) : null;
-    } catch {
-      return null;
-    }
-  });
-
   const [token, setToken] = useState(() => {
     return localStorage.getItem('expensesync-jwt') || null;
   });
 
-  const [loading, setLoading] = useState(false);
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(() => {
+    return Boolean(localStorage.getItem('expensesync-jwt'));
+  });
   const [authError, setAuthError] = useState(null);
 
-  useEffect(() => {
-    if (user) {
-      localStorage.setItem('expensesync-user', JSON.stringify(user));
-    } else {
-      localStorage.removeItem('expensesync-user');
-    }
-  }, [user]);
-
+  // Synchronize JWT token strictly in localStorage
   useEffect(() => {
     if (token) {
       localStorage.setItem('expensesync-jwt', token);
@@ -34,6 +22,49 @@ export function AuthProvider({ children }) {
       localStorage.removeItem('expensesync-jwt');
     }
   }, [token]);
+
+  // Load user profile from backend API /api/auth/me using token
+  const loadCurrentUser = useCallback(async () => {
+    const activeToken = token || localStorage.getItem('expensesync-jwt');
+    if (!activeToken) {
+      setUser(null);
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const res = await api.get('/auth/me');
+      if (res.data && res.data.id) {
+        setUser({
+          id: res.data.id,
+          name: res.data.name,
+          email: res.data.email,
+          currency: res.data.currency || 'INR'
+        });
+      } else {
+        setUser(null);
+      }
+    } catch (err) {
+      console.warn('Backend /api/auth/me validation failed:', err.message);
+      // If 401 or invalid token, clear session
+      if (err.response && err.response.status === 401) {
+        setToken(null);
+        localStorage.removeItem('expensesync-jwt');
+        setUser(null);
+      } else if (!err.response) {
+        // Network error / backend server offline
+        setAuthError('Backend core-service is offline (Port 8080).');
+      } else {
+        setUser(null);
+      }
+    } finally {
+      setLoading(false);
+    }
+  }, [token]);
+
+  useEffect(() => {
+    loadCurrentUser();
+  }, [loadCurrentUser]);
 
   const login = async (email, password) => {
     setLoading(true);
@@ -52,31 +83,17 @@ export function AuthProvider({ children }) {
 
       const data = await response.json();
       const authenticatedUser = {
-        id: data.id || 1,
-        name: data.name || (email.split('@')[0]),
-        email: data.email || email,
+        id: data.id,
+        name: data.name,
+        email: data.email,
         currency: data.currency || 'INR'
       };
 
       localStorage.setItem('expensesync-jwt', data.token);
-      localStorage.setItem('expensesync-user', JSON.stringify(authenticatedUser));
       setToken(data.token);
       setUser(authenticatedUser);
       return { success: true };
     } catch (err) {
-      // Fallback for demo simulation if backend is restarting
-      if (email === 'rahul@example.com' && password === 'Password@123') {
-        const demoUser = {
-          id: 1,
-          name: 'Rahul Sharma',
-          email: 'rahul@example.com',
-          currency: 'INR'
-        };
-        const demoToken = 'mock-jwt-token-rahul-2026';
-        setToken(demoToken);
-        setUser(demoUser);
-        return { success: true };
-      }
       setAuthError(err.message);
       return { success: false, error: err.message };
     } finally {
@@ -101,27 +118,19 @@ export function AuthProvider({ children }) {
 
       const data = await response.json();
       const newUser = {
-        id: data.id || Date.now(),
-        name: data.name || name,
-        email: data.email || email,
+        id: data.id,
+        name: data.name,
+        email: data.email,
         currency: data.currency || currency
       };
 
+      localStorage.setItem('expensesync-jwt', data.token);
       setToken(data.token);
       setUser(newUser);
       return { success: true };
     } catch (err) {
-      // Local fallback
-      const newUser = {
-        id: Date.now(),
-        name,
-        email,
-        currency
-      };
-      const demoToken = `mock-jwt-token-${newUser.id}`;
-      setToken(demoToken);
-      setUser(newUser);
-      return { success: true };
+      setAuthError(err.message);
+      return { success: false, error: err.message };
     } finally {
       setLoading(false);
     }
@@ -131,7 +140,6 @@ export function AuthProvider({ children }) {
     setToken(null);
     setUser(null);
     localStorage.removeItem('expensesync-jwt');
-    localStorage.removeItem('expensesync-user');
   };
 
   const updateProfile = (updated) => {
@@ -168,7 +176,8 @@ export function AuthProvider({ children }) {
         register,
         logout,
         updateProfile,
-        formatCurrency
+        formatCurrency,
+        reloadUser: loadCurrentUser
       }}
     >
       {children}

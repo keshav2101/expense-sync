@@ -24,7 +24,9 @@ export default function Expenses() {
     addExpense,
     editExpense,
     deleteExpense,
-    exportToCSV
+    exportToCSV,
+    loading,
+    error
   } = useExpenses();
 
   const { formatCurrency } = useAuth();
@@ -82,6 +84,16 @@ export default function Expenses() {
           </button>
         </div>
       </div>
+
+      {/* Backend API Error Banner */}
+      {error && (
+        <div className="alert alert-danger animate-slide-up" style={{ marginBottom: '1.25rem' }}>
+          <span style={{ fontSize: '1.25rem' }}>❌</span>
+          <div>
+            <strong>Backend API Error:</strong> Unable to connect to core-service (Port 8080). {error}
+          </div>
+        </div>
+      )}
 
       {/* Filter and Search Bar Tray */}
       <div className="card filter-tray">

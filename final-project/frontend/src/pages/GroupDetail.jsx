@@ -1,28 +1,48 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import initialGroups from '../data/mockGroups.json';
 import { useAuth } from '../context/AuthContext';
 import Toast from '../components/Toast';
 import api from '../api/axiosConfig';
 
 export default function GroupDetail() {
   const { id } = useParams();
-  const { formatCurrency } = useAuth();
+  const { formatCurrency, user } = useAuth();
 
-  const [groups, setGroups] = useState(() => {
-    const saved = localStorage.getItem('expensesync-groups');
-    return saved ? JSON.parse(saved) : initialGroups;
-  });
-
-  const group = groups.find((g) => g.id.toString() === id) || groups[0];
+  const [group, setGroup] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [toast, setToast] = useState(null);
 
   // Group Expense Form Modal State
   const [isAddExpenseOpen, setIsAddExpenseOpen] = useState(false);
   const [expTitle, setExpTitle] = useState('');
   const [expAmount, setExpAmount] = useState('');
-  const [paidBy, setPaidBy] = useState('Rahul Sharma (You)');
+  const [paidByUserId, setPaidByUserId] = useState('');
   const [splitType, setSplitType] = useState('EQUAL');
+
+  const fetchGroupDetail = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await api.get(`/groups/${id}`);
+      if (res.data) {
+        setGroup(res.data);
+        if (res.data.members && res.data.members.length > 0) {
+          setPaidByUserId(user?.id ? user.id.toString() : res.data.members[0].id.toString());
+        }
+      }
+    } catch (err) {
+      console.warn(`Backend /api/groups/${id} call failed:`, err.message);
+      setError(err.message || 'Failed to load group details from backend');
+      setGroup(null);
+    } finally {
+      setLoading(false);
+    }
+  }, [id, user]);
+
+  useEffect(() => {
+    fetchGroupDetail();
+  }, [fetchGroupDetail]);
 
   const handleAddGroupExpense = async (e) => {
     e.preventDefault();
@@ -30,39 +50,45 @@ export default function GroupDetail() {
 
     const amt = parseFloat(expAmount);
 
-    // Call backend API if connected
     try {
       await api.post('/expenses', {
         title: expTitle,
         amount: amt,
         category: 'FOOD',
-        groupId: group.id || 1,
+        groupId: Number(id),
         splitType: splitType
       });
+
+      setIsAddExpenseOpen(false);
+      setExpTitle('');
+      setExpAmount('');
+      setToast({ message: 'Group expense added & balances recalculated!', type: 'success' });
+      await fetchGroupDetail();
     } catch (err) {
-      console.warn('Backend /api/expenses group split call fallback:', err.message);
+      setToast({ message: `Failed to add group expense: ${err.message}`, type: 'error' });
     }
-
-    const newActivity = {
-      id: Date.now(),
-      text: `${paidBy} added '${expTitle}' (${formatCurrency(amt)}) via ${splitType} split`,
-      timestamp: new Date().toISOString().slice(0, 16).replace('T', ' ')
-    };
-
-    const updatedGroup = {
-      ...group,
-      activity: [newActivity, ...group.activity]
-    };
-
-    const updatedGroups = groups.map((g) => (g.id === group.id ? updatedGroup : g));
-    setGroups(updatedGroups);
-    localStorage.setItem('expensesync-groups', JSON.stringify(updatedGroups));
-
-    setIsAddExpenseOpen(false);
-    setExpTitle('');
-    setExpAmount('');
-    setToast({ message: 'Group expense added & balances recalculated!', type: 'success' });
   };
+
+  if (loading) {
+    return (
+      <div className="page-container" style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-muted)' }}>
+        Loading group #{id} details from core-service...
+      </div>
+    );
+  }
+
+  if (error || !group) {
+    return (
+      <div className="page-container">
+        <div className="alert alert-danger">
+          <strong>Error:</strong> {error || 'Group not found.'}
+        </div>
+        <Link to="/groups" className="btn btn-secondary btn-sm" style={{ marginTop: '1rem' }}>
+          &larr; Back to Groups
+        </Link>
+      </div>
+    );
+  }
 
   return (
     <div className="page-container animate-fade-in">
@@ -73,7 +99,7 @@ export default function GroupDetail() {
             <h2>{group.name}</h2>
             <span className="badge badge-travel">{group.type}</span>
           </div>
-          <p>{group.members.length} Members • Activity & Debt Simplification</p>
+          <p>{group.members ? group.members.length : 0} Members • Live Balances & Min-Cash-Flow Simplification</p>
         </div>
 
         <div style={{ display: 'flex', gap: '0.75rem' }}>
@@ -95,7 +121,9 @@ export default function GroupDetail() {
             <ul style={{ margin: '0.4rem 0 0 1.25rem', fontSize: '0.9rem' }}>
               {group.simplifiedDebts.map((debt, idx) => (
                 <li key={idx}>
-                  {debt.from || debt.fromUserName} pays <strong>{debt.to || debt.toUserName}</strong> {formatCurrency(debt.amount)}
+                  {debt.fromUserName || debt.from || `User #${debt.fromUserId}`} pays{' '}
+                  <strong>{debt.toUserName || debt.to || `User #${debt.toUserId}`}</strong>{' '}
+                  {formatCurrency(debt.amount)}
                 </li>
               ))}
             </ul>
@@ -109,10 +137,12 @@ export default function GroupDetail() {
       <h3 style={{ marginBottom: '1rem' }}>Group Member Balances</h3>
       <div className="stat-grid">
         {group.members && group.members.map((member) => {
-          const bal = (group.balances && group.balances[member.id]) ?? (group.netBalances && group.netBalances[member.id]) ?? 0;
+          const bal = (group.netBalances && group.netBalances[member.id] != null)
+            ? Number(group.netBalances[member.id])
+            : ((group.balances && group.balances[member.id] != null) ? Number(group.balances[member.id]) : 0);
           return (
             <div key={member.id} className="stat-card">
-              <div className="stat-label">{member.name}</div>
+              <div className="stat-label">{member.name} {member.id === user?.id ? '(You)' : ''}</div>
               <div
                 className="stat-value"
                 style={{
@@ -129,25 +159,19 @@ export default function GroupDetail() {
         })}
       </div>
 
-      {/* Group Activity Feed (Requirement D) */}
+      {/* Group Members List */}
       <div className="card" style={{ marginTop: '1.5rem' }}>
-        <h3 style={{ marginBottom: '1rem' }}>Group Activity Feed</h3>
+        <h3 style={{ marginBottom: '1rem' }}>Group Members</h3>
         <ul className="activity-list">
-          {group.activity && group.activity.length > 0 ? (
-            group.activity.map((act) => (
-              <li key={act.id} className="activity-item">
-                <span className="activity-icon">📌</span>
-                <div style={{ flex: 1 }}>
-                  <p style={{ margin: 0, fontWeight: 500 }}>{act.text}</p>
-                  <small style={{ color: 'var(--text-muted)' }}>{act.timestamp}</small>
-                </div>
-              </li>
-            ))
-          ) : (
-            <li style={{ padding: '0.5rem 0', color: 'var(--text-muted)', fontSize: '0.9rem' }}>
-              No recent group activity recorded.
+          {group.members && group.members.map((m) => (
+            <li key={m.id} className="activity-item">
+              <span className="activity-icon">👤</span>
+              <div style={{ flex: 1 }}>
+                <p style={{ margin: 0, fontWeight: 500 }}>{m.name} {m.id === user?.id ? '(You)' : ''}</p>
+                <small style={{ color: 'var(--text-muted)' }}>{m.email}</small>
+              </div>
             </li>
-          )}
+          ))}
         </ul>
       </div>
 
@@ -190,12 +214,12 @@ export default function GroupDetail() {
                 <div className="form-group">
                   <label>Paid By</label>
                   <select
-                    value={paidBy}
-                    onChange={(e) => setPaidBy(e.target.value)}
+                    value={paidByUserId}
+                    onChange={(e) => setPaidByUserId(e.target.value)}
                     className="form-select"
                   >
-                    {group.members.map((m) => (
-                      <option key={m.id} value={m.name}>{m.name}</option>
+                    {group.members && group.members.map((m) => (
+                      <option key={m.id} value={m.id}>{m.name} {m.id === user?.id ? '(You)' : ''}</option>
                     ))}
                   </select>
                 </div>
@@ -215,7 +239,7 @@ export default function GroupDetail() {
                 </select>
               </div>
 
-              {Number(expAmount) > 0 && (
+              {Number(expAmount) > 0 && group.members && (
                 <div className="split-preview-box">
                   <div style={{ fontSize: '0.85rem', fontWeight: 600 }}>
                     ⚡ Split Preview ({formatCurrency(expAmount)} / {group.members.length} members):

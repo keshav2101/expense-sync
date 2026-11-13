@@ -1,23 +1,45 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import initialGroups from '../data/mockGroups.json';
 import { useAuth } from '../context/AuthContext';
 import Toast from '../components/Toast';
+import api from '../api/axiosConfig';
 
 export default function Groups() {
-  const [groups, setGroups] = useState(() => {
-    const saved = localStorage.getItem('expensesync-groups');
-    return saved ? JSON.parse(saved) : initialGroups;
-  });
+  const [groups, setGroups] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const { formatCurrency } = useAuth();
+  const { formatCurrency, user } = useAuth();
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [newGroupName, setNewGroupName] = useState('');
   const [newGroupType, setNewGroupType] = useState('TRIP');
   const [memberEmails, setMemberEmails] = useState('');
   const [toast, setToast] = useState(null);
 
-  const handleCreateGroup = (e) => {
+  const fetchGroups = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await api.get('/groups');
+      if (Array.isArray(res.data)) {
+        setGroups(res.data);
+      } else {
+        setGroups([]);
+      }
+    } catch (err) {
+      console.warn('Backend /api/groups call failed:', err.message);
+      setError(err.message || 'Failed to fetch groups from server');
+      setGroups([]); // Zero/empty state on failure, not cached data
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchGroups();
+  }, [fetchGroups, user]);
+
+  const handleCreateGroup = async (e) => {
     e.preventDefault();
     if (!newGroupName.trim()) return;
 
@@ -26,36 +48,22 @@ export default function Groups() {
       .map((em) => em.trim())
       .filter((em) => em.length > 0);
 
-    const newGroup = {
-      id: Date.now(),
-      name: newGroupName.trim(),
-      type: newGroupType,
-      members: [
-        { id: 1, name: 'Rahul Sharma (You)', email: 'rahul@example.com' },
-        ...emails.map((em, idx) => ({
-          id: Date.now() + idx + 1,
-          name: em.split('@')[0],
-          email: em
-        }))
-      ],
-      balances: { "1": 0.00 },
-      simplifiedDebts: [],
-      activity: [
-        {
-          id: Date.now(),
-          text: `Rahul created the group "${newGroupName}"`,
-          timestamp: new Date().toISOString().slice(0, 16).replace('T', ' ')
-        }
-      ]
-    };
+    try {
+      const payload = {
+        name: newGroupName.trim(),
+        type: newGroupType,
+        memberEmails: emails
+      };
 
-    const updated = [newGroup, ...groups];
-    setGroups(updated);
-    localStorage.setItem('expensesync-groups', JSON.stringify(updated));
-    setIsCreateOpen(false);
-    setNewGroupName('');
-    setMemberEmails('');
-    setToast({ message: `Group "${newGroup.name}" created successfully!`, type: 'success' });
+      const res = await api.post('/groups', payload);
+      setIsCreateOpen(false);
+      setNewGroupName('');
+      setMemberEmails('');
+      setToast({ message: `Group "${res.data.name || newGroupName}" created successfully!`, type: 'success' });
+      fetchGroups();
+    } catch (err) {
+      setToast({ message: `Failed to create group: ${err.message}`, type: 'error' });
+    }
   };
 
   return (
@@ -70,43 +78,70 @@ export default function Groups() {
         </button>
       </div>
 
-      <div className="groups-grid">
-        {groups.map((group) => {
-          const userBalance = group.balances["1"] || 0;
-          return (
-            <div key={group.id} className="card group-card interactive-card">
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                <div>
-                  <h3 style={{ marginBottom: '0.25rem' }}>{group.name}</h3>
-                  <span className="badge badge-travel">{group.type}</span>
-                </div>
-                <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
-                  👥 {group.members.length} members
-                </span>
-              </div>
+      {error && (
+        <div className="alert alert-danger animate-slide-up" style={{ marginBottom: '1.25rem' }}>
+          <span style={{ fontSize: '1.25rem' }}>❌</span>
+          <div>
+            <strong>Error loading groups:</strong> {error}. Ensure core-service is running on Port 8080.
+          </div>
+        </div>
+      )}
 
-              <div style={{ margin: '1.25rem 0' }}>
-                <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Your Net Balance:</span>
-                <div style={{ fontSize: '1.4rem', fontWeight: 'bold' }}>
-                  {userBalance > 0 ? (
-                    <span style={{ color: 'var(--success)' }}>+ {formatCurrency(userBalance)} (You are owed)</span>
-                  ) : userBalance < 0 ? (
-                    <span style={{ color: 'var(--danger)' }}>- {formatCurrency(Math.abs(userBalance))} (You owe)</span>
-                  ) : (
-                    <span style={{ color: 'var(--text-muted)' }}>Settled Up (₹0.00)</span>
-                  )}
+      {loading ? (
+        <div style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-muted)' }}>
+          Loading groups from backend...
+        </div>
+      ) : groups.length === 0 ? (
+        <div className="card empty-state" style={{ textAlign: 'center', padding: '3rem 1.5rem' }}>
+          <span style={{ fontSize: '2.5rem' }}>👥</span>
+          <h3>No groups found</h3>
+          <p style={{ color: 'var(--text-muted)', maxWidth: '400px', margin: '0.5rem auto 1.5rem' }}>
+            You haven't joined or created any groups yet. Create a group to start splitting expenses!
+          </p>
+          <button onClick={() => setIsCreateOpen(true)} className="btn btn-primary btn-sm">
+            ➕ Create Your First Group
+          </button>
+        </div>
+      ) : (
+        <div className="groups-grid">
+          {groups.map((group) => {
+            const userBalance = (group.netBalances && user?.id ? group.netBalances[user.id] : null) 
+              ?? (group.balances && user?.id ? group.balances[user.id] : 0);
+            return (
+              <div key={group.id} className="card group-card interactive-card">
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                  <div>
+                    <h3 style={{ marginBottom: '0.25rem' }}>{group.name}</h3>
+                    <span className="badge badge-travel">{group.type}</span>
+                  </div>
+                  <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
+                    👥 {group.members ? group.members.length : 0} members
+                  </span>
+                </div>
+
+                <div style={{ margin: '1.25rem 0' }}>
+                  <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Your Net Balance:</span>
+                  <div style={{ fontSize: '1.4rem', fontWeight: 'bold' }}>
+                    {userBalance > 0 ? (
+                      <span style={{ color: 'var(--success)' }}>+ {formatCurrency(userBalance)} (You are owed)</span>
+                    ) : userBalance < 0 ? (
+                      <span style={{ color: 'var(--danger)' }}>- {formatCurrency(Math.abs(userBalance))} (You owe)</span>
+                    ) : (
+                      <span style={{ color: 'var(--text-muted)' }}>Settled Up (₹0.00)</span>
+                    )}
+                  </div>
+                </div>
+
+                <div style={{ display: 'flex', gap: '0.75rem', marginTop: 'auto' }}>
+                  <Link to={`/groups/${group.id}`} className="btn btn-secondary btn-sm" style={{ flex: 1 }}>
+                    View Group & Balances &rarr;
+                  </Link>
                 </div>
               </div>
-
-              <div style={{ display: 'flex', gap: '0.75rem', marginTop: 'auto' }}>
-                <Link to={`/groups/${group.id}`} className="btn btn-secondary btn-sm" style={{ flex: 1 }}>
-                  View Group & Balances &rarr;
-                </Link>
-              </div>
-            </div>
-          );
-        })}
-      </div>
+            );
+          })}
+        </div>
+      )}
 
       {/* Create Group Modal */}
       {isCreateOpen && (

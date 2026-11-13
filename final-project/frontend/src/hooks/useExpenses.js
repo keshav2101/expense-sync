@@ -1,5 +1,4 @@
 import { useState, useEffect, useMemo, useDebugValue, useCallback } from 'react';
-import initialExpenses from '../data/mockExpenses.json';
 import { useAuth } from '../context/AuthContext';
 import api from '../api/axiosConfig';
 
@@ -17,38 +16,41 @@ const DEFAULT_BUDGETS = {
 
 export function useExpenses() {
   const { user, token } = useAuth();
-  const userId = user?.id || 1;
-  const storageKey = `expensesync-expenses-u${userId}`;
-  const budgetKey = `expensesync-budgets-u${userId}`;
+  const userId = user?.id;
 
-  const [expenses, setExpenses] = useState(() => {
-    try {
-      const saved = localStorage.getItem(storageKey);
-      if (saved) return JSON.parse(saved);
-      return userId === 1 ? initialExpenses : [];
-    } catch {
-      return userId === 1 ? initialExpenses : [];
-    }
-  });
+  const [expenses, setExpenses] = useState([]);
+  const [budgets, setBudgets] = useState(DEFAULT_BUDGETS);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const [budgets, setBudgets] = useState(() => {
-    try {
-      const saved = localStorage.getItem(budgetKey);
-      return saved ? JSON.parse(saved) : DEFAULT_BUDGETS;
-    } catch {
-      return DEFAULT_BUDGETS;
-    }
-  });
+  // Filter & Search states
+  const [searchTerm, setSearchTerm] = useState('');
+  const [categoryFilter, setCategoryFilter] = useState('ALL');
+  const [paymentFilter, setPaymentFilter] = useState('ALL');
+  const [sortBy, setSortBy] = useState('date-desc');
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 6;
 
-  // Fetch real expenses from Spring Boot backend API
+  // Fetch real expenses and budgets from Spring Boot Core Service REST API
   const refreshExpensesFromApi = useCallback(async () => {
     const activeToken = token || localStorage.getItem('expensesync-jwt');
-    if (!activeToken) return;
+    if (!activeToken) {
+      setExpenses([]);
+      setLoading(false);
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
 
     try {
-      const res = await api.get('/expenses');
-      if (Array.isArray(res.data) && res.data.length > 0) {
-        const mapped = res.data.map((exp) => ({
+      const [expRes, budgetRes] = await Promise.all([
+        api.get('/expenses'),
+        api.get('/budgets').catch(() => ({ data: DEFAULT_BUDGETS }))
+      ]);
+
+      if (Array.isArray(expRes.data)) {
+        const mapped = expRes.data.map((exp) => ({
           id: exp.id,
           title: exp.title,
           amount: parseFloat(exp.amount) || 0,
@@ -60,35 +62,27 @@ export function useExpenses() {
           groupId: exp.groupId || null
         }));
         setExpenses(mapped);
-        localStorage.setItem(storageKey, JSON.stringify(mapped));
+      } else {
+        setExpenses([]);
+      }
+
+      if (budgetRes?.data && typeof budgetRes.data === 'object') {
+        setBudgets({ ...DEFAULT_BUDGETS, ...budgetRes.data });
       }
     } catch (err) {
-      console.warn('Backend /api/expenses fetch failed or offline; using local cached state:', err.message);
+      console.warn('Backend API fetch failed:', err.message);
+      setError(err.message || 'Failed to load expenses from core-service');
+      setExpenses([]); // Never fall back to mock data or stale cached data
+    } finally {
+      setLoading(false);
     }
-  }, [storageKey, token]);
+  }, [token]);
 
   useEffect(() => {
     refreshExpensesFromApi();
   }, [refreshExpensesFromApi, userId]);
 
-  // Filter & Search states
-  const [searchTerm, setSearchTerm] = useState('');
-  const [categoryFilter, setCategoryFilter] = useState('ALL');
-  const [paymentFilter, setPaymentFilter] = useState('ALL');
-  const [sortBy, setSortBy] = useState('date-desc');
-  const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 6;
-
-  // Persist to localStorage
-  useEffect(() => {
-    localStorage.setItem(storageKey, JSON.stringify(expenses));
-  }, [expenses, storageKey]);
-
-  useEffect(() => {
-    localStorage.setItem(budgetKey, JSON.stringify(budgets));
-  }, [budgets, budgetKey]);
-
-  // CRUD Operations with Spring Boot REST API calls
+  // CRUD Operations strictly calling Spring Boot REST API
   const addExpense = async (newExp) => {
     const payload = {
       title: newExp.title,
@@ -101,31 +95,21 @@ export function useExpenses() {
       groupId: newExp.groupId || null
     };
 
-    let created = {
+    const res = await api.post('/expenses', payload);
+    const created = {
       ...payload,
-      id: Date.now()
+      id: res.data?.id || Date.now(),
+      title: res.data?.title || payload.title,
+      amount: parseFloat(res.data?.amount) || payload.amount,
+      category: res.data?.category || payload.category
     };
-
-    try {
-      const res = await api.post('/expenses', payload);
-      if (res.data && res.data.id) {
-        created = {
-          ...payload,
-          id: res.data.id,
-          title: res.data.title || payload.title,
-          amount: parseFloat(res.data.amount) || payload.amount,
-          category: res.data.category || payload.category
-        };
-      }
-    } catch (err) {
-      console.warn('POST /api/expenses call failed; fallback to local state:', err.message);
-    }
 
     setExpenses((prev) => [created, ...prev]);
     return created;
   };
 
   const editExpense = async (id, updatedFields) => {
+    await api.put(`/expenses/${id}`, updatedFields);
     setExpenses((prev) =>
       prev.map((exp) =>
         exp.id === id
@@ -133,22 +117,11 @@ export function useExpenses() {
           : exp
       )
     );
-
-    try {
-      await api.put(`/expenses/${id}`, updatedFields);
-    } catch (err) {
-      console.warn(`PUT /api/expenses/${id} call failed; updated locally:`, err.message);
-    }
   };
 
   const deleteExpense = async (id) => {
+    await api.delete(`/expenses/${id}`);
     setExpenses((prev) => prev.filter((exp) => exp.id !== id));
-
-    try {
-      await api.delete(`/expenses/${id}`);
-    } catch (err) {
-      console.warn(`DELETE /api/expenses/${id} call failed; deleted locally:`, err.message);
-    }
   };
 
   // Filtered & Sorted Expenses
@@ -165,8 +138,14 @@ export function useExpenses() {
         return matchesSearch && matchesCategory && matchesPayment;
       })
       .sort((a, b) => {
-        if (sortBy === 'date-desc') return new Date(b.date) - new Date(a.date);
-        if (sortBy === 'date-asc') return new Date(a.date) - new Date(b.date);
+        if (sortBy === 'date-desc') {
+          const diff = new Date(b.date) - new Date(a.date);
+          return diff !== 0 ? diff : (b.id - a.id);
+        }
+        if (sortBy === 'date-asc') {
+          const diff = new Date(a.date) - new Date(b.date);
+          return diff !== 0 ? diff : (a.id - b.id);
+        }
         if (sortBy === 'amount-desc') return b.amount - a.amount;
         if (sortBy === 'amount-asc') return a.amount - b.amount;
         return 0;
@@ -197,7 +176,7 @@ export function useExpenses() {
   // Category Budget Health Status
   const getBudgetStatus = (category) => {
     const spent = categoryTotals[category] || 0;
-    const limit = budgets[category] || budgets.OTHER;
+    const limit = budgets[category] || budgets.OTHER || 2000;
     const percentage = limit > 0 ? Math.round((spent / limit) * 100) : 0;
 
     let status = 'NORMAL';
@@ -207,20 +186,35 @@ export function useExpenses() {
     return { spent, limit, percentage, status };
   };
 
-  // Export to CSV Function
-  const exportToCSV = () => {
-    const headers = ['Date,Category,Description,Amount,PaymentMethod,Status'];
-    const rows = expenses.map((exp) =>
-      `"${exp.date}","${exp.category}","${exp.title.replace(/"/g, '""')}",${exp.amount.toFixed(2)},"${exp.paymentMethod || 'UPI'}","PAID"`
-    );
-    const csvContent = 'data:text/csv;charset=utf-8,' + [headers, ...rows].join('\n');
-    const encodedUri = encodeURI(csvContent);
-    const link = document.createElement('a');
-    link.setAttribute('href', encodedUri);
-    link.setAttribute('download', `ExpenseSync_Report_${new Date().toISOString().slice(0, 10)}.csv`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+  // Export to CSV Function via Core Service API
+  const exportToCSV = async () => {
+    try {
+      const res = await api.get(`/reports/export-csv?userId=${userId || 1}`, {
+        responseType: 'blob'
+      });
+      const url = window.URL.createObjectURL(new Blob([res.data], { type: 'text/csv' }));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `ExpenseSync_Report_${new Date().toISOString().slice(0, 10)}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch {
+      // Fallback direct CSV export
+      const headers = ['Date,Category,Description,Amount,PaymentMethod,Status'];
+      const rows = expenses.map((exp) =>
+        `"${exp.date}","${exp.category}","${(exp.title || '').replace(/"/g, '""')}",${(exp.amount || 0).toFixed(2)},"${exp.paymentMethod || 'UPI'}","PAID"`
+      );
+      const csvContent = 'data:text/csv;charset=utf-8,' + [headers, ...rows].join('\n');
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement('a');
+      link.setAttribute('href', encodedUri);
+      link.setAttribute('download', `ExpenseSync_Report_${new Date().toISOString().slice(0, 10)}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
   };
 
   useDebugValue(`Expenses: ${expenses.length} items (Total: ₹${totalMonthlySpent.toFixed(2)})`);
@@ -247,6 +241,9 @@ export function useExpenses() {
     categoryTotals,
     totalMonthlySpent,
     getBudgetStatus,
-    exportToCSV
+    exportToCSV,
+    loading,
+    error,
+    refreshExpenses: refreshExpensesFromApi
   };
 }
