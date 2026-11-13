@@ -49,6 +49,7 @@ export default function Login() {
             <input
               type="email"
               required
+              autoComplete="email"
               className="form-control"
               placeholder="e.g. rahul@example.com"
               value={email}
@@ -61,6 +62,7 @@ export default function Login() {
             <input
               type="password"
               required
+              autoComplete="current-password"
               className="form-control"
               placeholder="••••••••"
               value={password}

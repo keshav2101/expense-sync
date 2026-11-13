@@ -57,6 +57,7 @@ export default function Register() {
               type="text"
               name="name"
               required
+              autoComplete="name"
               className="form-control"
               placeholder="e.g. Aarav Gupta"
               value={name}
@@ -69,6 +70,7 @@ export default function Register() {
             <input
               type="email"
               required
+              autoComplete="email"
               className="form-control"
               placeholder="e.g. aarav@example.com"
               value={email}
@@ -82,6 +84,7 @@ export default function Register() {
               type="password"
               required
               minLength={8}
+              autoComplete="new-password"
               className="form-control"
               placeholder="••••••••"
               value={password}
