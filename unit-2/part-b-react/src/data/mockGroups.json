@@ -4,25 +4,89 @@
     "name": "Goa Trip 2026",
     "type": "TRIP",
     "members": [
-      { "id": 1, "name": "Rahul Sharma (You)", "email": "rahul@example.com" },
-      { "id": 2, "name": "Priya Nair", "email": "priya@example.com" },
-      { "id": 3, "name": "Amit Patel", "email": "amit@example.com" },
-      { "id": 4, "name": "Sneha Rao", "email": "sneha@example.com" }
+      {
+        "id": 1,
+        "name": "Rahul Sharma",
+        "email": "rahul@example.com"
+      },
+      {
+        "id": 2,
+        "name": "Priya Nair",
+        "email": "priya@example.com"
+      },
+      {
+        "id": 3,
+        "name": "Amit Patel",
+        "email": "amit@example.com"
+      },
+      {
+        "id": 4,
+        "name": "Sneha Rao",
+        "email": "sneha@example.com"
+      }
     ],
     "balances": {
-      "1": -1250.00,
-      "2": 3400.00,
-      "3": -2150.00,
-      "4": 0.00
+      "1": -100,
+      "2": 9900,
+      "3": -5300,
+      "4": -4500
+    },
+    "netBalances": {
+      "1": -100,
+      "2": 9900,
+      "3": -5300,
+      "4": -4500
     },
     "simplifiedDebts": [
-      { "from": "Rahul Sharma (You)", "to": "Priya Nair", "amount": 1250.00 },
-      { "from": "Amit Patel", "to": "Priya Nair", "amount": 2150.00 }
+      {
+        "fromUserId": 3,
+        "fromUserName": "Amit Patel",
+        "from": "Amit Patel",
+        "toUserId": 2,
+        "toUserName": "Priya Nair",
+        "to": "Priya Nair",
+        "amount": 5300
+      },
+      {
+        "fromUserId": 4,
+        "fromUserName": "Sneha Rao",
+        "from": "Sneha Rao",
+        "toUserId": 2,
+        "toUserName": "Priya Nair",
+        "to": "Priya Nair",
+        "amount": 4500
+      },
+      {
+        "fromUserId": 1,
+        "fromUserName": "Rahul Sharma",
+        "from": "Rahul Sharma",
+        "toUserId": 2,
+        "toUserName": "Priya Nair",
+        "to": "Priya Nair",
+        "amount": 100
+      }
     ],
     "activity": [
-      { "id": 101, "text": "Priya added 'Beach Villa 2-Night Stay' (₹16,000)", "timestamp": "2026-11-07 14:30" },
-      { "id": 102, "text": "Rahul added 'Uber Airport Cab' (₹850)", "timestamp": "2026-11-04 09:15" },
-      { "id": 103, "text": "Amit settled ₹1,200 with Rahul", "timestamp": "2026-11-08 20:00" }
+      {
+        "id": 101,
+        "text": "Priya added 'Beach Villa 2-Night Stay' (₹16,000) for Rahul, Priya, Amit, Sneha",
+        "timestamp": "2026-11-07 14:30"
+      },
+      {
+        "id": 102,
+        "text": "Rahul added 'Scuba & Water Sports' (₹6,000) for group",
+        "timestamp": "2026-11-08 11:15"
+      },
+      {
+        "id": 103,
+        "text": "Sneha added 'Beach Shack Seafood Dinner' (₹1,600)",
+        "timestamp": "2026-11-08 20:30"
+      },
+      {
+        "id": 104,
+        "text": "Amit settled ₹1,200 with Rahul via UPI",
+        "timestamp": "2026-11-09 10:00"
+      }
     ]
   },
   {
@@ -30,22 +94,238 @@
     "name": "Flatmates B-302",
     "type": "HOME",
     "members": [
-      { "id": 1, "name": "Rahul Sharma (You)", "email": "rahul@example.com" },
-      { "id": 3, "name": "Amit Patel", "email": "amit@example.com" },
-      { "id": 4, "name": "Sneha Rao", "email": "sneha@example.com" }
+      {
+        "id": 1,
+        "name": "Rahul Sharma",
+        "email": "rahul@example.com"
+      },
+      {
+        "id": 3,
+        "name": "Amit Patel",
+        "email": "amit@example.com"
+      },
+      {
+        "id": 4,
+        "name": "Sneha Rao",
+        "email": "sneha@example.com"
+      }
     ],
     "balances": {
-      "1": 450.00,
-      "3": -450.00,
-      "4": 0.00
+      "1": 116.67,
+      "3": 366.67,
+      "4": -483.34
+    },
+    "netBalances": {
+      "1": 116.67,
+      "3": 366.67,
+      "4": -483.34
     },
     "simplifiedDebts": [
-      { "from": "Amit Patel", "to": "Rahul Sharma (You)", "amount": 450.00 }
+      {
+        "fromUserId": 4,
+        "fromUserName": "Sneha Rao",
+        "from": "Sneha Rao",
+        "toUserId": 3,
+        "toUserName": "Amit Patel",
+        "to": "Amit Patel",
+        "amount": 366.67
+      },
+      {
+        "fromUserId": 4,
+        "fromUserName": "Sneha Rao",
+        "from": "Sneha Rao",
+        "toUserId": 1,
+        "toUserName": "Rahul Sharma",
+        "to": "Rahul Sharma",
+        "amount": 116.67
+      }
     ],
     "activity": [
-      { "id": 201, "text": "Rahul added 'Electricity Bill B-302' (₹1,450)", "timestamp": "2026-11-11 18:00" },
-      { "id": 202, "text": "Sneha settled ₹800 with Rahul", "timestamp": "2026-11-04 11:20" }
+      {
+        "id": 201,
+        "text": "Amit added 'Electricity & High-Speed Wi-Fi' (₹1,450)",
+        "timestamp": "2026-11-01 18:00"
+      },
+      {
+        "id": 202,
+        "text": "Rahul added 'Blinkit Monthly Groceries' (₹1,200)",
+        "timestamp": "2026-11-05 15:30"
+      },
+      {
+        "id": 203,
+        "text": "Sneha settled ₹800 with Rahul via UPI",
+        "timestamp": "2026-11-06 11:20"
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "name": "Tech Hackathon SRM",
+    "type": "PROJECT",
+    "members": [
+      {
+        "id": 1,
+        "name": "Rahul Sharma",
+        "email": "rahul@example.com"
+      },
+      {
+        "id": 2,
+        "name": "Priya Nair",
+        "email": "priya@example.com"
+      },
+      {
+        "id": 5,
+        "name": "Vikram Malhotra",
+        "email": "vikram@example.com"
+      },
+      {
+        "id": 6,
+        "name": "Ananya Iyer",
+        "email": "ananya@example.com"
+      }
+    ],
+    "balances": {
+      "1": 200,
+      "2": 1400,
+      "5": -600,
+      "6": -1000
+    },
+    "netBalances": {
+      "1": 200,
+      "2": 1400,
+      "5": -600,
+      "6": -1000
+    },
+    "simplifiedDebts": [
+      {
+        "fromUserId": 6,
+        "fromUserName": "Ananya Iyer",
+        "from": "Ananya Iyer",
+        "toUserId": 2,
+        "toUserName": "Priya Nair",
+        "to": "Priya Nair",
+        "amount": 1000
+      },
+      {
+        "fromUserId": 5,
+        "fromUserName": "Vikram Malhotra",
+        "from": "Vikram Malhotra",
+        "toUserId": 2,
+        "toUserName": "Priya Nair",
+        "to": "Priya Nair",
+        "amount": 400
+      },
+      {
+        "fromUserId": 5,
+        "fromUserName": "Vikram Malhotra",
+        "from": "Vikram Malhotra",
+        "toUserId": 1,
+        "toUserName": "Rahul Sharma",
+        "to": "Rahul Sharma",
+        "amount": 200
+      }
+    ],
+    "activity": [
+      {
+        "id": 301,
+        "text": "Priya added 'AWS Cloud & Domain Hosting' (₹2,400)",
+        "timestamp": "2026-11-05 16:00"
+      },
+      {
+        "id": 302,
+        "text": "Rahul added 'Pizza & Red Bull Sprints' (₹1,200)",
+        "timestamp": "2026-11-06 23:00"
+      },
+      {
+        "id": 303,
+        "text": "Ananya settled ₹500 with Priya via UPI",
+        "timestamp": "2026-11-07 10:15"
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "name": "Weekend Foodies Club",
+    "type": "OTHER",
+    "members": [
+      {
+        "id": 2,
+        "name": "Priya Nair",
+        "email": "priya@example.com"
+      },
+      {
+        "id": 4,
+        "name": "Sneha Rao",
+        "email": "sneha@example.com"
+      },
+      {
+        "id": 5,
+        "name": "Vikram Malhotra",
+        "email": "vikram@example.com"
+      },
+      {
+        "id": 7,
+        "name": "Rohan Verma",
+        "email": "rohan@example.com"
+      }
+    ],
+    "balances": {
+      "2": -100,
+      "4": -900,
+      "5": 1900,
+      "7": -900
+    },
+    "netBalances": {
+      "2": -100,
+      "4": -900,
+      "5": 1900,
+      "7": -900
+    },
+    "simplifiedDebts": [
+      {
+        "fromUserId": 4,
+        "fromUserName": "Sneha Rao",
+        "from": "Sneha Rao",
+        "toUserId": 5,
+        "toUserName": "Vikram Malhotra",
+        "to": "Vikram Malhotra",
+        "amount": 900
+      },
+      {
+        "fromUserId": 7,
+        "fromUserName": "Rohan Verma",
+        "from": "Rohan Verma",
+        "toUserId": 5,
+        "toUserName": "Vikram Malhotra",
+        "to": "Vikram Malhotra",
+        "amount": 900
+      },
+      {
+        "fromUserId": 2,
+        "fromUserName": "Priya Nair",
+        "from": "Priya Nair",
+        "toUserId": 5,
+        "toUserName": "Vikram Malhotra",
+        "to": "Vikram Malhotra",
+        "amount": 100
+      }
+    ],
+    "activity": [
+      {
+        "id": 401,
+        "text": "Vikram added 'Korean Barbecue Feast' (₹2,800)",
+        "timestamp": "2026-11-08 21:00"
+      },
+      {
+        "id": 402,
+        "text": "Priya added 'Artisanal Boba & Desserts' (₹800)",
+        "timestamp": "2026-11-08 22:30"
+      },
+      {
+        "id": 403,
+        "text": "Rohan settled ₹250 with Vikram via UPI",
+        "timestamp": "2026-11-09 14:00"
+      }
     ]
   }
 ]
-

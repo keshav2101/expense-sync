@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import api from '../api/axiosConfig';
+import api, { API_BASE } from '../api/axiosConfig';
 
 const AuthContext = createContext();
 
@@ -70,7 +70,7 @@ export function AuthProvider({ children }) {
     setLoading(true);
     setAuthError(null);
     try {
-      const response = await fetch('http://localhost:8080/api/auth/login', {
+      const response = await fetch(`${API_BASE}/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
@@ -105,7 +105,7 @@ export function AuthProvider({ children }) {
     setLoading(true);
     setAuthError(null);
     try {
-      const response = await fetch('http://localhost:8080/api/auth/register', {
+      const response = await fetch(`${API_BASE}/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email, password, currency })

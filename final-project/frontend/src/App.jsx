@@ -32,8 +32,8 @@ function AppContent() {
     <div className="app-root">
       <Navbar />
       <div className={`app-layout ${!isAuthenticated ? 'auth-layout' : ''}`}>
-        <Sidebar />
-        <main className="main-content" style={{ width: !isAuthenticated ? '100%' : undefined }}>
+        {isAuthenticated && <Sidebar />}
+        <main className={`main-content ${!isAuthenticated ? 'auth-main' : ''}`}>
           <Routes>
             {/* Public Auth Routes */}
             <Route path="/login" element={<Login />} />

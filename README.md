@@ -99,12 +99,15 @@ expense-sync/
 
 ## 🔑 Seed Demo Credentials
 
-| Role | Name | Email | Password |
-| :--- | :--- | :--- | :--- |
-| **Primary User** | Rahul Sharma | `rahul@example.com` | `Password@123` |
-| **Member 2** | Priya Nair | `priya@example.com` | `Password@123` |
-| **Member 3** | Amit Patel | `amit@example.com` | `Password@123` |
-| **Member 4** | Sneha Rao | `sneha@example.com` | `Password@123` |
+| Role / Persona | Name | Email | Password | Persona & Focus |
+| :--- | :--- | :--- | :--- | :--- |
+| **Primary User** | Rahul Sharma | `rahul@example.com` | `Password@123` | Full-Stack Dev (Rent, Swiggy, Uber, Hackathon) |
+| **UI/UX Designer** | Priya Nair | `priya@example.com` | `Password@123` | Designer (IKEA, Cult.fit, Goa Villa, Cloud credits) |
+| **Backend Engineer** | Amit Patel | `amit@example.com` | `Password@123` | Engineer (Flat B-302 electricity, tech gear, dining) |
+| **Product Manager** | Sneha Rao | `sneha@example.com` | `Password@123` | PM (Urban Ladder furniture, Metro pass, Flat split) |
+| **Data Analyst** | Vikram Malhotra | `vikram@example.com` | `Password@123` | Trekker (Manali gear, flight, BBQ feast, Foodies Club) |
+| **Freelance Creator** | Ananya Iyer | `ananya@example.com` | `Password@123` | Creator (Figma Pro, Rode mic, Notion AI, Hackathon) |
+| **SRM Student** | Rohan Verma | `rohan@example.com` | `Password@123` | Student (Textbooks, canteen thali, Wi-Fi, Foodies Club) |
 
 ---
 
@@ -239,9 +242,14 @@ erDiagram
 
 | View | Screenshot | Description |
 | :--- | :--- | :--- |
+| **Stateless JWT Login & Demo Switcher** | ![Login Screen](unit-5/screenshots/01-login-screen.png) | Spring Security stateless authentication screen with 1-click 7-account demo switcher and centered responsive card |
 | **Financial Dashboard** | ![Financial Dashboard](unit-5/screenshots/02-dashboard-personal-budgets.png) | Personal budget meters, spending summary cards, category donut chart, and 80% caution alerts |
-| **Splitwise Bill Splitting** | ![Group Debt Simplification](unit-5/screenshots/05-group-detail-simplified-debts.png) | Group expense feed, live 4-method split preview, and greedy minimum-cash-flow simplified debts |
-| **Microservice Analytics** | ![Microservice Analytics](unit-5/screenshots/07-microservice-analytics-report.png) | Dedicated microservice (`analytics-service`: 8082) monthly spending breakdown and insights |
+| **Personal Expense Tracker** | ![Personal Expense Tracker](unit-5/screenshots/03-expenses-tracker-crud.png) | Full CRUD expense manager with instant search, category filters, and pagination |
+| **Splitwise Groups Overview** | ![Groups Overview](unit-5/screenshots/04-groups-overview.png) | Interlinked shared expense groups with live balances and membership management |
+| **Group Debt Simplification** | ![Group Debt Simplification](unit-5/screenshots/05-group-detail-simplified-debts.png) | Group expense feed, live 4-method split preview, and greedy minimum-cash-flow simplified debts |
+| **Peer-to-Peer Settle Up** | ![Settle Up](unit-5/screenshots/06-settle-up-balances.png) | Peer-to-peer balance settlement with automatic net balance recalculation and settlement payment log |
+| **Microservice Analytics** | ![Microservice Analytics](unit-5/screenshots/07-microservice-analytics-report.png) | Dedicated microservice (`analytics-service`: 8082) monthly spending breakdown, health status, and CSV streaming |
+| **Dark Theme Mode** | ![Dark Theme](unit-5/screenshots/10-dark-mode-theme.png) | System-wide high-contrast dark theme mode toggle via CSS variables |
 | **Mobile Responsive UI** | ![Mobile Responsive View](unit-5/screenshots/09-mobile-responsive-view.png) | High-contrast, touch-optimized responsive layout tested across mobile viewports (375px) |
 
 ---

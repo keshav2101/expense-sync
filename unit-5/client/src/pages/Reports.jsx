@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { API_BASE } from '../api/axiosConfig';
 import StatCard from '../components/StatCard';
 
 export default function Reports() {
@@ -19,7 +20,7 @@ export default function Reports() {
       const headers = {};
       if (token) headers['Authorization'] = `Bearer ${token}`;
 
-      const res = await fetch(`http://localhost:8080/api/reports/analytics?userId=${user?.id || 1}`, {
+      const res = await fetch(`${API_BASE}/reports/analytics?userId=${user?.id || 1}`, {
         headers
       });
 
@@ -39,7 +40,7 @@ export default function Reports() {
     try {
       const headers = {};
       if (token) headers['Authorization'] = `Bearer ${token}`;
-      const res = await fetch(`http://localhost:8080/api/reports/export-csv?userId=${user?.id || 1}`, { headers });
+      const res = await fetch(`${API_BASE}/reports/export-csv?userId=${user?.id || 1}`, { headers });
       if (!res.ok) throw new Error(`HTTP ${res.status}: Failed to export CSV`);
       const text = await res.text();
 

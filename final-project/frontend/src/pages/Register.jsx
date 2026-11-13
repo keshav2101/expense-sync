@@ -36,23 +36,36 @@ export default function Register() {
   };
 
   return (
-    <div className="auth-page animate-fade-in" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '80vh', padding: '1rem' }}>
-      <div className="card" style={{ maxWidth: '460px', width: '100%', padding: '2rem', boxShadow: 'var(--shadow-lg)' }}>
-        <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
-          <div style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>✨</div>
-          <h2 style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--text-main)' }}>Create an Account</h2>
-          <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>Join ExpenseSync to manage budgets & split debts</p>
+    <div className="auth-page animate-fade-in">
+      <div className="card" style={{ width: '100%', maxWidth: '460px', padding: '2.5rem 2rem', boxShadow: 'var(--shadow-lg)', borderRadius: 'var(--border-radius-lg)', margin: 'auto' }}>
+        <div style={{ textAlign: 'center', marginBottom: '1.75rem' }}>
+          <div style={{
+            width: '56px',
+            height: '56px',
+            borderRadius: '50%',
+            background: 'var(--primary-light)',
+            color: 'var(--primary)',
+            display: 'inline-flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: '1.75rem',
+            marginBottom: '1rem'
+          }}>
+            ✨
+          </div>
+          <h2 style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '0.35rem' }}>Create an Account</h2>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', margin: 0 }}>Join ExpenseSync to manage budgets & split debts</p>
         </div>
 
         {errorMsg && (
-          <div style={{ padding: '0.75rem', marginBottom: '1rem', background: '#fee2e2', border: '1px solid #ef4444', borderRadius: 'var(--radius)', color: '#b91c1c', fontSize: '0.85rem' }}>
+          <div style={{ padding: '0.75rem 1rem', marginBottom: '1.25rem', background: 'var(--danger-bg)', border: '1px solid var(--danger)', borderRadius: 'var(--border-radius)', color: '#b91c1c', fontSize: '0.875rem' }}>
             {errorMsg}
           </div>
         )}
 
         <form onSubmit={handleSubmit}>
           <div className="form-group" style={{ marginBottom: '1rem' }}>
-            <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, marginBottom: '0.35rem' }}>Full Name *</label>
+            <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, marginBottom: '0.4rem', color: 'var(--text-primary)' }}>Full Name *</label>
             <input
               type="text"
               name="name"
@@ -66,7 +79,7 @@ export default function Register() {
           </div>
 
           <div className="form-group" style={{ marginBottom: '1rem' }}>
-            <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, marginBottom: '0.35rem' }}>Email Address *</label>
+            <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, marginBottom: '0.4rem', color: 'var(--text-primary)' }}>Email Address *</label>
             <input
               type="email"
               required
@@ -79,7 +92,7 @@ export default function Register() {
           </div>
 
           <div className="form-group" style={{ marginBottom: '1rem' }}>
-            <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, marginBottom: '0.35rem' }}>Password (8+ chars) *</label>
+            <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, marginBottom: '0.4rem', color: 'var(--text-primary)' }}>Password (8+ chars) *</label>
             <input
               type="password"
               required
@@ -93,7 +106,7 @@ export default function Register() {
           </div>
 
           <div className="form-group" style={{ marginBottom: '1.25rem' }}>
-            <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, marginBottom: '0.35rem' }}>Default Currency</label>
+            <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, marginBottom: '0.4rem', color: 'var(--text-primary)' }}>Default Currency</label>
             <select
               value={currency}
               onChange={(e) => setCurrency(e.target.value)}
@@ -109,7 +122,7 @@ export default function Register() {
             type="submit"
             className="btn btn-primary"
             disabled={loading}
-            style={{ width: '100%', padding: '0.75rem', fontSize: '1rem', fontWeight: 600, marginBottom: '1rem' }}
+            style={{ width: '100%', padding: '0.75rem', fontSize: '1rem', fontWeight: 600, marginBottom: '1rem', cursor: loading ? 'not-allowed' : 'pointer' }}
           >
             {loading ? 'Creating Account...' : 'Register'}
           </button>
@@ -118,16 +131,16 @@ export default function Register() {
             type="button"
             onClick={autofillNewUser}
             className="btn btn-secondary btn-sm"
-            style={{ width: '100%', fontSize: '0.85rem' }}
+            style={{ width: '100%', fontSize: '0.85rem', padding: '0.6rem' }}
           >
             ⚡ Autofill New User (Aarav Gupta)
           </button>
         </form>
 
-        <div style={{ marginTop: '1.25rem', paddingTop: '1rem', borderTop: '1px solid var(--border)', textAlign: 'center' }}>
-          <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
+        <div style={{ marginTop: '1.5rem', paddingTop: '1.25rem', borderTop: '1px solid var(--border-color)', textAlign: 'center' }}>
+          <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', margin: 0 }}>
             Already have an account?{' '}
-            <Link to="/login" style={{ color: 'var(--primary)', fontWeight: 600 }}>
+            <Link to="/login" style={{ color: 'var(--primary)', fontWeight: 600, textDecoration: 'none' }}>
               Sign In
             </Link>
           </p>
